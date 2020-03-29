@@ -1,0 +1,61 @@
+@import 'variables'
+
+\:host
+  position: relative 
+  display: block
+  top: 0
+  left: 0
+  width: 100% 
+  height: 100%
+  user-select: none 
+  z-index: 10000
+  transform-origin: top left
+  overflow: hidden
+  box-sizing: border-box
+  .carousel-counter
+    text-align: right
+    position: absolute
+    z-index: 30
+    transition: opacity 200ms
+    top: 8px 
+    right: 24px
+    border-radius: 13px
+    background-color: rgba(23, 37, 68, 0.3)
+    font-size: 11px
+    color: #ffffff
+    padding: 5px 7px
+    line-height: initial
+  .carousel-cells
+    transition: transform 200ms
+    width: 100% 
+    height: 100%
+    display: block 
+    ::ng-deep
+      .carousel-cell.swiper-prev-image
+        transform: translate3d(-100%, 0, 0)
+      .carousel-cell.swiper-next-image
+        transform: translate3d(100%, 0, 0)
+      .carousel-cell
+        width: 100% 
+        height: 100%
+        text-align: center
+        position: absolute
+        display: flex
+        align-items: center
+        justify-content: center
+        overflow: hidden
+        img,
+        video
+          width: 100%
+          height: 100%
+          position: relative
+          object-fit: contain
+        img.swiper-hide 
+          display: none 
+        .carousel-play
+          position: absolute
+          top: 0
+          left: 0
+          bottom: 0
+          right: 0
+          z-index: 1

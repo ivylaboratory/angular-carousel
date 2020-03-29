@@ -1,0 +1,16 @@
+<div class="carousel-counter" *ngIf="isCounter">{{counter}}</div>
+
+<div class="carousel-cells" (transitionend)="handleTransitionendCellContainer($event)">
+	<ng-template ngFor let-image [ngForOf]="images" let-i="index">
+		<div class="carousel-cell" 
+			*ngIf="i < cellLimit" 
+			[style.width]="cellWidth+'px'"
+			[style.border-radius]="borderRadius+'px'">
+			<img 
+				*ngIf="getFile(i) && getFile(i)['image']" 
+				[src]="getFile(i)['image']['path']"
+				[style.object-fit]="objectFit"
+				draggable="false" />
+		</div>
+	</ng-template>
+</div>
