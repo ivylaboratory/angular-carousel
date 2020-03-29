@@ -9,16 +9,17 @@ Live demo can be found on [home page](http://ivylab.space/carousel).
 ## Installation
 
 Install the npm package.
-
+```
   npm i @ivylab/angular-carousel
-
+```
 Import module:
-
+```ts
   import {IvyCarouselModule} from '@ivylab/angular-carousel';
 
   @NgModule({
       imports: [IvyCarouselModule]
   })
+```
 
 ## Usage
 Prepare an image array for the carousel. If necessary, specify in the settings the sizes of the cells and the carousel container. And also select the method of arranging images inside the cells using the objectFit property.
