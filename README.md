@@ -45,7 +45,7 @@ height: number
 width: number
 // Carousel Width
 
-cellWidth: number = 200
+cellWidth: number | '100%' = 200
 // Cell width
 
 overflowCellsLimit: number = 3
@@ -71,6 +71,15 @@ counterSeparator: string = " / "
 
 borderRadius: number
 // Border radius for carousel cells
+
+arrows: boolean = true
+// Arrows for image navigation
+
+arrowsOutside: boolean
+// Arrows on the outside of the carousel container
+
+arrowsTheme: 'light' | 'dark' = 'light'
+// Arrow color theme
 ```
 
 ## Browser support

@@ -31,6 +31,9 @@ export class Carousel {
     isSlideInProgress: boolean;
     isMoveInProgress: boolean;
     isTransitionInProgress: boolean;
+    isTouchstart: boolean;
+    isSlideLengthLimited: boolean;
+    isContainerPositionCorrection: boolean;
 
     containerInitialPositionX: number;
     isContentImages: boolean = true;
@@ -89,6 +92,10 @@ export class Carousel {
         return Math.floor(this.slideCounter / this.totalContainerCellsCount);
     }
 
+    get visibleCellsOverflowContainer() {
+        return (this.visibleCellsCount * this.fullCellWidth -this.margin) > this.visibleWidth;
+    }
+
     constructor(properties: Properties) {
         this.element = properties.element;
         this.properties = properties;
@@ -100,6 +107,8 @@ export class Carousel {
     }
 
     handleTouchstart = (event: any) => {
+        this.isTouchstart = true;
+
         if (this.isSlideInProgress) {
             return;
         }
@@ -132,7 +141,8 @@ export class Carousel {
     }
 
     handleTouchend = (event: any) => {
-        if (this.isSlideInProgress) {
+        if (this.isSlideInProgress || !this.isTouchstart) {
+            this.isTouchstart = false;
             return;
         }
 
@@ -146,6 +156,7 @@ export class Carousel {
         }
 
         this.startX = this.moveX = this.distanceAbs = undefined;
+        this.isTouchstart = false;
     }
 
     /* Move */
@@ -169,6 +180,8 @@ export class Carousel {
 
     getContainerPosition() {
         let correction = this.getContainerPositionCorrection();
+
+        this.isContainerPositionCorrection = correction != 0;
         return (this.initialContainerPosition + this.newContainerPositionIndex * this.fullCellWidth) + correction;
     }
 
@@ -180,9 +193,13 @@ export class Carousel {
     getContainerPositionCorrection() {
         let correction = 0;
 
-        if ((this.images.length - this.preliminarySlideCounter) < this.visibleCellsCount) {
+        if ((this.images.length - this.preliminarySlideCounter) < this.visibleCellsCount || this.isSlideLengthLimited) {
             if (this.visibleWidth < this.totalContainerCellsCount * this.fullCellWidth) {
-                correction = this.fullCellWidth + (this.visibleWidth - this.visibleCellsCount * this.fullCellWidth);
+                correction = - (this.visibleCellsCount * this.fullCellWidth - this.visibleWidth - this.margin);
+            }
+
+            if (correction >= - this.margin) {
+                correction = 0;
             }
         }
 
@@ -221,7 +238,6 @@ export class Carousel {
     getContainerWidth() {
         this.totalContainerCellsCount = this.visibleCellsCount + this.overflowCellsLimit * 2;
         let containerWidth = this.totalContainerCellsCount * this.fullCellWidth;
-
         let totalImageWidth = this.images.length * this.fullCellWidth;
 
         if (totalImageWidth < containerWidth) {
@@ -232,7 +248,7 @@ export class Carousel {
     }
 
     getFile(cellIndex) {
-        let imageIndex = this.getFileIndex(cellIndex);
+        let imageIndex = this.getFileIndex(cellIndex); 
         let file = this.images[imageIndex];
 
         if (file && !file.type) {
@@ -285,15 +301,33 @@ export class Carousel {
         return this.distanceAbs >= this.minSwipeDistance;
     }
 
-    handleSlide(): void {
+    next() {
+        if (this.isSlideInProgress) {
+            return;
+        }
+
+        this.direction = 'left';
+        this.handleSlide(1);
+    }
+
+    prev() {
+        if (this.isSlideInProgress) {
+            return;
+        }
+
+        this.direction = 'right';
+        this.handleSlide(1);
+    }
+
+    handleSlide(slideLength: number = undefined): void {
         this.slideLength = this.getSlideLength();
-        this.slideLength = this.limitSlideLength(this.slideLength);
+        this.slideLength = slideLength ? slideLength : this.limitSlideLength(this.slideLength);
 
         if (this.direction === 'left' && !this.isSlideInProgress) {
+            this.preliminarySlideCounter = this.slideCounter + this.slideLength;
 
-            if (!this.detectLastSlide(this.slideCounter + this.slideLength - 1)) {
-                this.preliminarySlideCounter = this.slideCounter + this.slideLength;
-                this.newContainerPositionIndex = this.newContainerPositionIndex - this.slideLength; 
+            if (!this.detectLastSlide(this.slideCounter + this.slideLength)) {
+                this.newContainerPositionIndex = this.newContainerPositionIndex - this.slideLength;
                 this.isSlideInProgress = true;
 
                 if (this.isLazyLoad) {
@@ -311,8 +345,9 @@ export class Carousel {
                 this.slideLength = this.slideCounter;
             }
 
+            this.preliminarySlideCounter = this.slideCounter - this.slideLength;
+
             if (!this.isFirstCell) {
-                this.preliminarySlideCounter = this.slideCounter - this.slideLength;
                 this.newContainerPositionIndex = this.newContainerPositionIndex + this.slideLength;
                 this.isSlideInProgress = true;
 
@@ -349,8 +384,9 @@ export class Carousel {
             for (var i = 0; i < slideLength; i++) {
                 let newSlideCounter = this.slideCounter + (slideLength - i);
 
-                if (!this.detectLastSlide(newSlideCounter - 1)) {
+                if (!this.detectLastSlide(newSlideCounter)) {
                     slideLength = slideLength - i;
+                    this.isSlideLengthLimited = i > 0;
                     break;
                 }
             }
@@ -362,6 +398,18 @@ export class Carousel {
         return (this.images.length - slideCounter) < this.visibleCellsCount;
     }
 
+    isNextArrowDisabled() {
+        if (this.visibleCellsOverflowContainer) {
+            return this.detectLastSlide(this.slideCounter + 1) && this.isContainerPositionCorrection;
+        } else {
+            return this.detectLastSlide(this.slideCounter + 1);
+        }
+    }
+
+    isPrevArrowDisabled() {
+        return this.slideCounter === 0;
+    }
+
     detectContainerUnlock() {
         return (this.images.length - this.preliminarySlideCounter) < (this.visibleCellsCount + this.overflowCellsLimit);
     }
@@ -371,7 +419,8 @@ export class Carousel {
             this.transformSlideEnd();
 
             this.isSlideInProgress = false;
-            this.newContainerPositionIndex = 0; 
+            this.newContainerPositionIndex = 0;
+            this.isSlideLengthLimited = undefined;
         }
     }
 

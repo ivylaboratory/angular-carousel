@@ -10,8 +10,14 @@
   user-select: none 
   z-index: 10000
   transform-origin: top left
-  overflow: hidden
   box-sizing: border-box
+  .carousel-container
+    overflow: hidden
+    width: 100% 
+    height: 100%
+    cursor: grab
+  .carousel-container.carousel-moving
+    cursor: grabbing
   .carousel-counter
     text-align: right
     position: absolute
@@ -59,3 +65,35 @@
           bottom: 0
           right: 0
           z-index: 1
+
+  .carousel-arrow
+    width: 40px
+    height: 40px
+    background-color: #fff
+    background-repeat: no-repeat
+    background-size: 31px
+    background-position: center
+    border-radius: 100px
+    position: absolute
+    top: 50%
+    margin-top: -20px
+    z-index: 10
+    cursor: pointer
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15)
+  .carousel-arrow-prev
+    left: 10px
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMTUuNDEgMTYuNTlMMTAuODMgMTJsNC41OC00LjU5TDE0IDZsLTYgNiA2IDYgMS40MS0xLjQxeiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMFYweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==)
+  .carousel-arrow-next 
+    right: 10px
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNOC41OSAxNi41OUwxMy4xNyAxMiA4LjU5IDcuNDEgMTAgNmw2IDYtNiA2LTEuNDEtMS40MXoiLz48cGF0aCBkPSJNMCAwaDI0djI0SDBWMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=)
+  .carousel-arrows-outside
+    .carousel-arrow-prev
+      left: -60px
+    .carousel-arrow-next
+      right: -60px
+  .carousel-dark-arrows
+    .carousel-arrow
+      filter: invert(1)
+  .carousel-arrow-disabled
+    cursor: default
+    opacity: 0.5

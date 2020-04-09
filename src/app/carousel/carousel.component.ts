@@ -6,7 +6,8 @@ import {Carousel} from './carousel';
 
 
 @Component({
-	selector: 'carousel',
+    selector: 'carousel, [carousel]',
+    exportAs: 'carousel',
 	templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.sass']
 })
@@ -22,6 +23,8 @@ export class CarouselComponent implements OnDestroy {
     isVideoPlaying: boolean;
     _isCounter: boolean;
     _width: number;
+    _cellWidth: number | '100%' = 200;
+    isMoving: boolean;
 
     get isLandscape(){
         return window.innerWidth > window.innerHeight;
@@ -55,7 +58,6 @@ export class CarouselComponent implements OnDestroy {
     @Input() height: number = 200;
     @Input() width: number;
     @Input() borderRadius: number;
-    @Input() cellWidth: number = 200;
     @Input() margin: number = 10;
     @Input() objectFit: 'contain' | 'cover' = 'cover';
     @Input() minSwipeDistance: number = 50;
@@ -65,6 +67,13 @@ export class CarouselComponent implements OnDestroy {
     @Input() counterSeparator: string = " / ";
     @Input() overflowCellsLimit: number = 3;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
+
+    @Input('cellWidth') set cellWidth(value: number | '100%') {
+        if (value){
+            this._cellWidth = value;
+        }
+    }
+
     @Input('counter') set isCounter(value: boolean) {
         if (value){
             this._isCounter = value;
@@ -74,12 +83,9 @@ export class CarouselComponent implements OnDestroy {
         return this._isCounter && this.images.length > 1;
     }
 
-    @Input('id') set id(value: any) {
-        this._id = value;
-    }
-    get id(){
-        return this._id;
-    }
+    @Input() arrows: boolean = true;
+    @Input() arrowsOutside: boolean;
+    @Input() arrowsTheme: 'light' | 'dark' = 'light';
 
     get cellLimit() {
         if (this.carousel) {
@@ -143,7 +149,7 @@ export class CarouselComponent implements OnDestroy {
             element: this.elementRef.nativeElement.querySelector('.carousel-cells'),
             container: this.elementRef.nativeElement,
             images: this.images,
-            cellWidth: this.cellWidth,
+            cellWidth: this.getCellWidth(),
             overflowCellsLimit: this.overflowCellsLimit,
             visibleWidth: this.width,
             margin: this.margin,
@@ -167,6 +173,7 @@ export class CarouselComponent implements OnDestroy {
     handleTouchstart = (event: any) => {
         event.preventDefault();
         this.carousel.handleTouchstart(event);
+        this.isMoving = true;
     }
 
     /* Touchmove */
@@ -178,6 +185,7 @@ export class CarouselComponent implements OnDestroy {
     /* Touchend */
     handleTouchend = (event: any) => {
         this.carousel.handleTouchend(event);
+        this.isMoving = false;
     }
 
     /* Tap */
@@ -211,5 +219,29 @@ export class CarouselComponent implements OnDestroy {
 
     getCurrentIndex() {
         return this.carousel.slideCounter;
+    }
+
+    getCellWidth(): number {
+        if (this._cellWidth === '100%') {
+            return this.elementRef.nativeElement.clientWidth;
+        } else {
+            return this._cellWidth;
+        }
+    }
+
+    next() {
+        this.carousel.next(1);
+    }
+
+    prev() {
+        this.carousel.prev(1);
+    }
+
+    isNextArrowDisabled() {
+        return this.carousel.isNextArrowDisabled();
+    }
+
+    isPrevArrowDisabled() {
+        return this.carousel.isPrevArrowDisabled();
     }
 }

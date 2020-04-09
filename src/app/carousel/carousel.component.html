@@ -1,16 +1,28 @@
 <div class="carousel-counter" *ngIf="isCounter">{{counter}}</div>
 
-<div class="carousel-cells" (transitionend)="handleTransitionendCellContainer($event)">
-	<ng-template ngFor let-image [ngForOf]="images" let-i="index">
-		<div class="carousel-cell" 
-			*ngIf="i < cellLimit" 
-			[style.width]="cellWidth+'px'"
-			[style.border-radius]="borderRadius+'px'">
-			<img 
-				*ngIf="getFile(i) && getFile(i)['image']" 
-				[src]="getFile(i)['image']['path']"
-				[style.object-fit]="objectFit"
-				draggable="false" />
-		</div>
-	</ng-template>
+<div class="carousel-container" [class.carousel-moving]="isMoving">
+	<div class="carousel-cells" (transitionend)="handleTransitionendCellContainer($event)">
+		<ng-template ngFor let-image [ngForOf]="images" let-i="index">
+			<div class="carousel-cell" 
+				*ngIf="i < cellLimit" 
+				[style.width]="getCellWidth()+'px'"
+				[style.border-radius]="borderRadius+'px'">
+
+				<img 
+					*ngIf="getFile(i) && getFile(i)['image']" 
+					[src]="getFile(i)['image']['path']"
+					[style.object-fit]="objectFit"
+					draggable="false" />
+			</div>
+		</ng-template>
+	</div>
+</div>
+
+<div class="carousel-arrows" 
+	[class.carousel-arrows-outside]="arrowsOutside" 
+	[class.carousel-dark-arrows]="arrowsTheme === 'dark'"
+	*ngIf="arrows">
+	
+	<div class="carousel-arrow carousel-arrow-prev" [class.carousel-arrow-disabled]="isPrevArrowDisabled()" (click)="prev()"></div>
+	<div class="carousel-arrow carousel-arrow-next" [class.carousel-arrow-disabled]="isNextArrowDisabled()" (click)="next()"></div>
 </div>
