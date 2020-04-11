@@ -22,4 +22,4 @@ import { CarouselComponent } from './carousel.component';
         CarouselComponent
     ]
 })
-export class CarouselModule { }
+export class IvyCarouselModule { }

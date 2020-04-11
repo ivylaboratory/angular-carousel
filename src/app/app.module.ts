@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CarouselModule } from './carousel/carousel.module';
+import { IvyCarouselModule } from './carousel/carousel.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,7 @@ import { CarouselModule } from './carousel/carousel.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CarouselModule
+    IvyCarouselModule
   ],
   providers: [],
   bootstrap: [AppComponent]
