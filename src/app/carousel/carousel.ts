@@ -12,7 +12,7 @@ export interface Properties {
     transitionDuration: number;
     transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear';
     videoProperties: any;
-    slideCounterChange$: Subject<number>
+    slideCounterChange$: Subject<number>;
 }
 
 export class Carousel {
