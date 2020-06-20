@@ -3,6 +3,7 @@ import {ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Hos
 import {Images} from './interfaces';
 import {Touches} from './touches';
 import {Carousel} from './carousel';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class CarouselComponent implements OnDestroy {
     _width: number;
     _cellWidth: number | '100%' = 200;
     isMoving: boolean;
+    slideCounterChange$: Subject<number> = new Subject();
 
     get isLandscape(){
         return window.innerWidth > window.innerHeight;
@@ -54,7 +56,7 @@ export class CarouselComponent implements OnDestroy {
     }
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
-
+    @Output() slideCounterChange: EventEmitter<number> = new EventEmitter<number>();
     @Input() height: number = 200;
     @Input() width: number;
     @Input() borderRadius: number;
@@ -126,6 +128,8 @@ export class CarouselComponent implements OnDestroy {
 
         this.initCarousel();
         this.setDimensions();
+
+        this.slideCounterChange$.subscribe(index => this.slideCounterChange.emit(index));
     }
 
     ngAfterViewInit() {
@@ -142,6 +146,7 @@ export class CarouselComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.touches.destroy();
+        this.slideCounterChange$.complete();
     }
 
     initCarousel() {
@@ -156,7 +161,8 @@ export class CarouselComponent implements OnDestroy {
             minSwipeDistance: this.minSwipeDistance,
             transitionDuration: this.transitionDuration,
             transitionTimingFunction: this.transitionTimingFunction,
-            videoProperties: this.videoProperties
+            videoProperties: this.videoProperties,
+            slideCounterChange$: this.slideCounterChange$
         });
     }
 

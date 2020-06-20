@@ -53,8 +53,8 @@ export class AppComponent {
 
     ngAfterViewInit() {
         this.myCarousel = this.carouselComponent.find(elem => elem.id === "my-carousel");
-    }
-
+	}
+	
     requestFullscreen() {
     	document.documentElement.requestFullscreen();
     }
@@ -91,5 +91,9 @@ export class AppComponent {
 
 	select(index) {
 		this.myCarousel.select(index);
+	}
+
+	onImgChange(index: number) {
+		console.log(index);
 	}
 }

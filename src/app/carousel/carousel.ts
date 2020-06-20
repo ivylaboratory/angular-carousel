@@ -1,3 +1,5 @@
+import { Subject } from 'rxjs';
+
 export interface Properties {
     element: HTMLElement;
     container: HTMLElement;
@@ -10,6 +12,7 @@ export interface Properties {
     transitionDuration: number;
     transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear';
     videoProperties: any;
+    slideCounterChange$: Subject<number>;
 }
 
 export class Carousel {
@@ -444,6 +447,7 @@ export class Carousel {
 
         this.direction = undefined;
         this.slideLength = 0;
+        this.properties.slideCounterChange$.next(this.slideCounter);
     }
 
     resetTransition() {

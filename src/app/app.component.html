@@ -1,7 +1,6 @@
 <div class="container">
-	<carousel
-		[images]="images">
+	<carousel [images]="images" (slideCounterChange)="onImgChange($event)">
 	</carousel>
 </div>
-
+  
 <router-outlet></router-outlet>
