@@ -3,6 +3,7 @@ export interface Properties {
     container: HTMLElement;
     images: any;
     cellWidth: number;
+    loop: boolean;
     overflowCellsLimit: number;
     visibleWidth: number;
     margin: number;
@@ -40,9 +41,17 @@ export class Carousel {
     visibleWidth: number;
     totalContainerCellsCount: number;
     isLazyLoad: boolean = true;
-    isContainerLocked: boolean = false;
+    isContainerLocked: boolean = true;
     alignCells: "left" | "center" = "left";
     initialContainerPosition: number = 0;
+
+    get cellLength() {
+        if (this.images) {
+            return this.images.length;
+        } else {
+            return this.cells.length;
+        }
+    }
 
     get isFirstCell() {
         return this.slideCounter === 0;
@@ -193,7 +202,7 @@ export class Carousel {
     getContainerPositionCorrection() {
         let correction = 0;
 
-        if ((this.images.length - this.preliminarySlideCounter) < this.visibleCellsCount || this.isSlideLengthLimited) {
+        if ((this.cellLength - this.preliminarySlideCounter) < this.visibleCellsCount || this.isSlideLengthLimited) {
             if (this.visibleWidth < this.totalContainerCellsCount * this.fullCellWidth) {
                 correction = - (this.visibleCellsCount * this.fullCellWidth - this.visibleWidth - this.margin);
             }
@@ -238,7 +247,7 @@ export class Carousel {
     getContainerWidth() {
         this.totalContainerCellsCount = this.visibleCellsCount + this.overflowCellsLimit * 2;
         let containerWidth = this.totalContainerCellsCount * this.fullCellWidth;
-        let totalImageWidth = this.images.length * this.fullCellWidth;
+        let totalImageWidth = this.cellLength * this.fullCellWidth;
 
         if (totalImageWidth < containerWidth) {
             containerWidth = totalImageWidth;
@@ -265,27 +274,34 @@ export class Carousel {
         const positionIndex = this.getPositionIndex(cellIndex);
         const numberLeftCells = (this.totalContainerCellsCount - 1) / 2;
         let imageIndex;
+        let counter;
+
+        if (this.properties.loop) {
+            counter = this.slideCounter % this.cellLength;
+        } else {
+            counter = this.slideCounter;
+        }
 
         if (!this.isContainerLocked) {
-            if (this.slideCounter <= this.overflowCellsLimit) {
+            if (counter <= this.overflowCellsLimit) {
                 return cellIndex;
             } else {
-                let cellLimitOverflow = this.slideCounter - this.overflowCellsLimit;
+                let cellLimitOverflow = counter - this.overflowCellsLimit;
                 imageIndex = positionIndex + cellLimitOverflow;
                 return imageIndex;
             }
         }
 
         if (this.alignCells === "left") {
-            if (this.slideCounter > this.overflowCellsLimit) {
-                let cellLimitOverflow = this.slideCounter - this.overflowCellsLimit;
+            if (counter > this.overflowCellsLimit) {
+                let cellLimitOverflow = counter - this.overflowCellsLimit;
                 imageIndex = positionIndex + cellLimitOverflow;
             } else {
                 imageIndex = cellIndex;
             }
         }
 
-        if (imageIndex > this.lastCellIndex) {
+        if (imageIndex > this.lastCellIndex && !this.properties.loop) {
             return false;
         }
 
@@ -317,6 +333,11 @@ export class Carousel {
 
         this.direction = 'right';
         this.handleSlide(1);
+    }
+
+    select(index: number) {
+        this.slideCounter = index;
+        this.quicklyPositionContainer();
     }
 
     handleSlide(slideLength: number = undefined): void {
@@ -395,7 +416,11 @@ export class Carousel {
     }
 
     detectLastSlide(slideCounter: number) {
-        return (this.images.length - slideCounter) < this.visibleCellsCount;
+        if (this.properties.loop) {
+            return false;
+        } else {
+            return (this.cellLength - slideCounter) < this.visibleCellsCount;
+        }
     }
 
     isNextArrowDisabled() {
@@ -411,7 +436,7 @@ export class Carousel {
     }
 
     detectContainerUnlock() {
-        return (this.images.length - this.preliminarySlideCounter) < (this.visibleCellsCount + this.overflowCellsLimit);
+        return (this.cellLength - this.preliminarySlideCounter) < (this.visibleCellsCount + this.overflowCellsLimit);
     }
 
     handleSlideEnd() {
@@ -427,7 +452,9 @@ export class Carousel {
     transformSlideEnd() {
         if (this.isLazyLoad) {
             this.setSlideCounter();
-            this.quicklyPositionContainer();
+            if (this.images) {
+                this.quicklyPositionContainer();
+            }
         }
 
         this.previousSlideCounter = this.slideCounter;
@@ -484,6 +511,9 @@ export class Carousel {
             let cell = cells[i];
             let positionX = this.getCellPositionX(i);
             (cell as HTMLElement).style.transform = 'translateX(' + positionX + 'px)';
+
+            // notice
+            (cell as HTMLElement).style.width = this.properties.cellWidth+'px';
         };
     }
 
@@ -493,7 +523,15 @@ export class Carousel {
     }
 
     getPositionIndex(cellIndex) {
-        let slideCounter = this.slideCounter - this.overflowCellsLimit;
+        let counter;
+
+        if (this.properties.loop) {
+            counter = this.slideCounter % this.cellLength;
+        } else {
+            counter = this.slideCounter;
+        }
+
+        let slideCounter = counter - this.overflowCellsLimit;
         let positionIndex;
 
         if (slideCounter > this.totalContainerCellsCount) {
@@ -513,7 +551,7 @@ export class Carousel {
     }
 
     get containerOverflowRightCount() {
-        let totalOverflowCellsCount = this.images.length - this.totalContainerCellsCount;
+        let totalOverflowCellsCount = this.cellLength - this.totalContainerCellsCount;
         let overflowRight = 0;
 
         if (totalOverflowCellsCount > 0) {

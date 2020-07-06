@@ -22,6 +22,18 @@ Import module:
 ```
 
 ## Usage
+Put the contents of your cells in containers with the `carousel-cell` class.
+
+```html
+<carousel>
+    <div class="carousel-cell">
+        <img src="path_to_image">
+    </div>
+    <div class="carousel-cell">
+        ...
+</carousel>
+```
+
 Prepare an image array for the carousel. If necessary, specify in the settings the sizes of the cells and the carousel container. And also select the method of arranging images inside the cells using the objectFit property.
 
 ```html

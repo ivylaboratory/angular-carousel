@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, ViewChild, EventEmitter, HostBinding, HostListener, Input, Output, OnDestroy, SimpleChanges} from '@angular/core';
 
 import {Images} from './interfaces';
 import {Touches} from './touches';
@@ -6,14 +6,13 @@ import {Carousel} from './carousel';
 
 
 @Component({
-    selector: 'carousel, [carousel]',
+	selector: 'carousel, [carousel]',
     exportAs: 'carousel',
 	templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.sass']
 })
 
 export class CarouselComponent implements OnDestroy {
-    
     _id: string;
     _images: Images;
     touches: any;
@@ -25,6 +24,8 @@ export class CarouselComponent implements OnDestroy {
     _width: number;
     _cellWidth: number | '100%' = 200;
     isMoving: boolean;
+    isNgContent: boolean;
+    cellLength: number;
 
     get isLandscape(){
         return window.innerWidth > window.innerHeight;
@@ -38,7 +39,15 @@ export class CarouselComponent implements OnDestroy {
     }
 
     get counter() {
-        return this.carousel.slideCounter + 1 + this.counterSeparator + this.images.length;
+        let counter;
+
+        if (this.loop) {
+            counter = this.slideCounter % this.cellLength;
+        } else {
+            counter = this.slideCounter;
+        }
+
+        return counter + 1 + this.counterSeparator + this.cellLength;
     }
 
     @Input()
@@ -49,17 +58,14 @@ export class CarouselComponent implements OnDestroy {
         return this._images;
     }
 
-    get isNgContent(){
-        return this.elementRef.nativeElement.querySelector('.carousel-content-wrapper').children.length > 0;
-    }
-
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
     @Input() height: number = 200;
     @Input() width: number;
+    @Input() loop: boolean = false;
     @Input() borderRadius: number;
     @Input() margin: number = 10;
-    @Input() objectFit: 'contain' | 'cover' = 'cover';
+    @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
     @Input() minSwipeDistance: number = 50;
     @Input() transitionDuration: number = 200;
     @Input() transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' = 'ease';
@@ -80,7 +86,7 @@ export class CarouselComponent implements OnDestroy {
         }
     }
     get isCounter() {
-        return this._isCounter && this.images.length > 1;
+        return this._isCounter && this.cellLength > 1;
     }
 
     @Input() arrows: boolean = true;
@@ -92,6 +98,8 @@ export class CarouselComponent implements OnDestroy {
             return this.carousel.cellLimit;
         }
     }
+
+    @ViewChild('cells') cells: ElementRef;
 
     @HostBinding('class.carousel') hostClassCarousel: boolean = true;
     @HostBinding('style.height') hostStyleHeight: string;
@@ -112,6 +120,8 @@ export class CarouselComponent implements OnDestroy {
     }
 
     ngOnInit(){
+        this.isNgContent = this.cells.nativeElement.children.length > 0;
+
         this.touches = new Touches({
             element: this.elementRef.nativeElement.querySelector('.carousel-cells'),
             listeners: this.listeners
@@ -129,6 +139,8 @@ export class CarouselComponent implements OnDestroy {
     }
 
     ngAfterViewInit() {
+        this.cellLength = this.getCellLength();
+        this.ref.detectChanges();
         this.carousel.lineUpCells();
     }
 
@@ -150,6 +162,7 @@ export class CarouselComponent implements OnDestroy {
             container: this.elementRef.nativeElement,
             images: this.images,
             cellWidth: this.getCellWidth(),
+            loop: this.loop,
             overflowCellsLimit: this.overflowCellsLimit,
             visibleWidth: this.width,
             margin: this.margin,
@@ -174,18 +187,31 @@ export class CarouselComponent implements OnDestroy {
         event.preventDefault();
         this.carousel.handleTouchstart(event);
         this.isMoving = true;
+        this.events.emit({
+            type: 'touchstart',
+            event
+        });
     }
 
     /* Touchmove */
     handleHorizontalSwipe = (event: any) => {
         event.preventDefault();
         this.carousel.handleHorizontalSwipe(event);
+        this.events.emit({
+            type: 'swipe',
+            event
+        });
     }
 
     /* Touchend */
     handleTouchend = (event: any) => {
+        const touches = event.touches;
         this.carousel.handleTouchend(event);
         this.isMoving = false;
+        this.events.emit({
+            type: 'touchend',
+            event
+        });
     }
 
     /* Tap */
@@ -194,6 +220,12 @@ export class CarouselComponent implements OnDestroy {
         const cellIndex = this.carousel.currentCellIndex;
         const fileIndex = this.carousel.getFileIndex(i);
         const file = this.carousel.getFile(cellIndex);
+
+        this.events.emit({
+            type: 'click',
+            file: file,
+            index: fileIndex
+        });
     }
 
     handleTransitionendCellContainer(event) {
@@ -237,11 +269,23 @@ export class CarouselComponent implements OnDestroy {
         this.carousel.prev(1);
     }
 
+    select(index: number) {
+        this.carousel.select(index);
+    }
+
     isNextArrowDisabled() {
         return this.carousel.isNextArrowDisabled();
     }
 
     isPrevArrowDisabled() {
         return this.carousel.isPrevArrowDisabled();
+    }
+
+    getCellLength() {
+        if (this.images) {
+            return this.images.length;
+        } else {
+            return this.cells.nativeElement.children.length;
+        }
     }
 }
