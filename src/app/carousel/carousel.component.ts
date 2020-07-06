@@ -72,6 +72,10 @@ export class CarouselComponent implements OnDestroy {
         return counter + 1 + this.counterSeparator + this.cellLength;
     }
 
+    get cellsElement() {
+        return this.elementRef.nativeElement.querySelector('.carousel-cells');
+    }
+
     @Input()
     set images(images: Images & any) {
         this._images = images;
@@ -121,8 +125,6 @@ export class CarouselComponent implements OnDestroy {
         }
     }
 
-    @ViewChild('cells') cells: ElementRef;
-
     @HostBinding('class.carousel') hostClassCarousel: boolean = true;
     @HostBinding('style.height') hostStyleHeight: string;
     @HostBinding('style.width') hostStyleWidth: string;
@@ -142,10 +144,10 @@ export class CarouselComponent implements OnDestroy {
     }
 
     ngOnInit(){
-        this.isNgContent = this.cells.nativeElement.children.length > 0;
+        this.isNgContent = this.cellsElement.children.length > 0;
 
         this.touches = new Touches({
-            element: this.elementRef.nativeElement.querySelector('.carousel-cells'),
+            element: this.cellsElement,
             listeners: this.listeners
         });
 
@@ -307,7 +309,7 @@ export class CarouselComponent implements OnDestroy {
         if (this.images) {
             return this.images.length;
         } else {
-            return this.cells.nativeElement.children.length;
+            return this.cellsElement.children.length;
         }
     }
 }
