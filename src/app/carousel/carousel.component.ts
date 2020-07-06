@@ -13,6 +13,28 @@ import {Carousel} from './carousel';
 })
 
 export class CarouselComponent implements OnDestroy {
+
+    get isContainerLocked() {
+        return this.carousel.isContainerLocked;
+    }
+    get slideCounter() {
+        return this.carousel.slideCounter;
+    }
+    get previousSlideCounter() {
+        return this.carousel.previousSlideCounter;
+    }
+    get lapCounter() {
+        return this.carousel.lapCounter;
+    }
+
+    lineUpCells() {
+        this.carousel.lineUpCells();
+    }
+
+    quicklyPositionContainer() {
+        this.carousel.quicklyPositionContainer();
+    }
+    
     _id: string;
     _images: Images;
     touches: any;
