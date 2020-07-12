@@ -56,7 +56,11 @@ export class Carousel {
 
     get totalContainerCellsCount() {
         if (this.images) {
-            return this.visibleCellsCount + this.overflowCellsLimit * 2;
+            let cellLength = this.visibleCellsCount + this.overflowCellsLimit * 2;
+            if (cellLength > this.images.length) {
+                cellLength = this.images.length;
+            }
+            return cellLength;
         } else {
             return this.cellLength;
         }
@@ -71,7 +75,15 @@ export class Carousel {
     }
 
     get overflowCellsLimit() {
-        return this.properties.overflowCellsLimit;
+        if (this.images && this.isImagesLessCellLimit) {
+            return Math.floor((this.images.length - this.visibleCellsCount) / 2);
+        } else {
+            return this.properties.overflowCellsLimit;
+        }
+    }
+
+    get isImagesLessCellLimit() {
+        return this.properties.overflowCellsLimit * 2 + this.visibleCellsCount > this.images.length;
     }
 
     get cellLimit() {
@@ -191,7 +203,6 @@ export class Carousel {
     /* Align */
     alignContainer(duration: number = this.transitionDuration) {
         let positionX = this.getContainerPosition();
-
         this.transformPositionX(positionX, duration);
         this.setInitialContainerPosition(positionX);
     }

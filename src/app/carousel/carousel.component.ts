@@ -120,6 +120,10 @@ export class CarouselComponent implements OnDestroy {
         return this._isCounter && this.cellLength > 1;
     }
 
+    get activeDotIndex() {
+        return this.slideCounter % this.cellLength;
+    }
+
     @Input() arrows: boolean = true;
     @Input() arrowsOutside: boolean;
     @Input() arrowsTheme: 'light' | 'dark' = 'light';

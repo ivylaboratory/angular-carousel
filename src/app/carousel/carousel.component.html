@@ -36,7 +36,7 @@
 	</div>
 
 	<div class="carousel-dots" *ngIf="dots">
-		<div class="carousel-dot" [class.carousel-dot-active]="i === slideCounter" *ngFor="let dot of dotsArr; index as i"></div>
+		<div class="carousel-dot" [class.carousel-dot-active]="i === activeDotIndex" *ngFor="let dot of dotsArr; index as i"></div>
 	</div>
 </div>
 
