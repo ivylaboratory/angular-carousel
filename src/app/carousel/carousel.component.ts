@@ -48,6 +48,7 @@ export class CarouselComponent implements OnDestroy {
     isMoving: boolean;
     isNgContent: boolean;
     cellLength: number;
+    dotsArr:any;
 
     get isLandscape(){
         return window.innerWidth > window.innerHeight;
@@ -89,6 +90,10 @@ export class CarouselComponent implements OnDestroy {
     @Input() height: number = 200;
     @Input() width: number;
     @Input() loop: boolean = false;
+    @Input() autoplay: boolean = false;
+    @Input() autoplayInterval: number = 5000;
+    @Input() pauseOnHover: boolean = true;
+    @Input() dots: boolean = false;
     @Input() borderRadius: number;
     @Input() margin: number = 10;
     @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
@@ -138,6 +143,20 @@ export class CarouselComponent implements OnDestroy {
         this.carousel.lineUpCells();
     }
 
+    @HostListener('mousemove', ['$event'])
+    onMousemove(event: MouseEvent) {
+        if (this.autoplay && this.pauseOnHover) {
+            this.carousel.stopAutoplay();
+        }
+    }
+
+    @HostListener('mouseleave', ['$event'])
+    onMouseleave(event: MouseEvent) {
+        if (this.autoplay && this.pauseOnHover) {
+            this.carousel.autoplay();
+        }
+    }
+
     constructor(
         private elementRef: ElementRef, 
         private ref: ChangeDetectorRef){
@@ -160,10 +179,15 @@ export class CarouselComponent implements OnDestroy {
 
         this.initCarousel();
         this.setDimensions();
+
+        if (this.autoplay) {
+            this.carousel.autoplay();
+        }
     }
 
     ngAfterViewInit() {
         this.cellLength = this.getCellLength();
+        this.dotsArr = Array(this.cellLength).fill(1);
         this.ref.detectChanges();
         this.carousel.lineUpCells();
     }
@@ -178,6 +202,7 @@ export class CarouselComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.touches.destroy();
+        this.carousel.destroy()
     }
 
     initCarousel() {
@@ -187,6 +212,7 @@ export class CarouselComponent implements OnDestroy {
             images: this.images,
             cellWidth: this.getCellWidth(),
             loop: this.loop,
+            autoplayInterval: this.autoplayInterval,
             overflowCellsLimit: this.overflowCellsLimit,
             visibleWidth: this.width,
             margin: this.margin,
@@ -287,10 +313,12 @@ export class CarouselComponent implements OnDestroy {
 
     next() {
         this.carousel.next(1);
+        this.carousel.stopAutoplay();
     }
 
     prev() {
         this.carousel.prev(1);
+        this.carousel.stopAutoplay();
     }
 
     select(index: number) {

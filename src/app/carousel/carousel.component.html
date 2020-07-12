@@ -9,14 +9,34 @@
 				*ngIf="i < cellLimit" 
 				[style.width]="getCellWidth()+'px'"
 				[style.border-radius]="borderRadius+'px'">
+
 				<!-- Image -->
 				<img 
 					*ngIf="getFile(i) && getFile(i)['image']" 
 					[src]="getFile(i)['image']['path']"
 					[style.object-fit]="objectFit"
 					draggable="false" />
+
+				<!-- Video -->
+				<ng-template [ngIf]="getFile(i) && getFile(i)['type'] === 'video'">
+					<div class="carousel-play" (click)="toggleVideo(video)"></div>
+
+					<video #video
+						[loop]="videoProperties.loop"
+						[muted]="videoProperties.muted"
+						[controls]="isSafari"
+						[style.object-fit]="objectFit"
+						[style.border-radius]="borderRadius+'px'">
+						
+						<source [src]="getFile(i)['path']" type="video/mp4">
+					</video>
+				</ng-template>
 			</div>
 		</ng-template>
+	</div>
+
+	<div class="carousel-dots" *ngIf="dots">
+		<div class="carousel-dot" [class.carousel-dot-active]="i === slideCounter" *ngFor="let dot of dotsArr; index as i"></div>
 	</div>
 </div>
 

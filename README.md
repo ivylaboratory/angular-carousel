@@ -50,50 +50,28 @@ images = [
 
 ## Properties
 
-```ts
-height: number
-// Carousel height
-
-width: number
-// Carousel Width
-
-cellWidth: number | '100%' = 200
-// Cell width
-
-overflowCellsLimit: number = 3
-// The number of carousel cells that will be stored for in the DOM tree outside the scope.
-
-margin: number = 10
-// Cell spacing
-
-minSwipeDistance: number = 50
-// Minimum distance for swipe
-
-transitionDuration: number = 200
-// Animation duration
-
-transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' = 'ease'
-// Smooth animation function
-
-counter: boolean = false
-// Counter
-
-counterSeparator: string = " / "
-// Counter separator
-
-borderRadius: number
-// Border radius for carousel cells
-
-arrows: boolean = true
-// Arrows for image navigation
-
-arrowsOutside: boolean
-// Arrows on the outside of the carousel container
-
-arrowsTheme: 'light' | 'dark' = 'light'
-// Arrow color theme
-```
+| name | type | default | description |
+|------|------|---------|-------------|
+| height | number | | Carousel height. |
+| width | number | | Carousel Width. |
+| cellWidth | number, '100%' | 200 | Cell width. |
+| loop | boolean | false | Infinite loop. |
+| autoplay | boolean | false | Automatically start the carousel after initialization. |
+| autoplayInterval | number | 5000 | The interval between scrolling the carousel. Used together with autoplay. |
+| pauseOnHover | boolean | true | Stops autoplay if the cursor is over the carousel area. |
+| dots | boolean | false | Carousel progress bar. |
+| overflowCellsLimit | number | 3 | The number of carousel cells that will be stored for in the DOM tree outside the scope. |
+| margin | number | 10 | Cell spacing. |
+| minSwipeDistance | number | 50 | Minimum distance for swipe. |
+| transitionDuration | number | 200 | Animation duration. |
+| transitionTimingFunction | 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear' | 'ease' | Smooth animation function. |
+| counter | boolean | false | Counter. |
+| counterSeparator | string | " / " | Counter separator. |
+| borderRadius | number | 0 | Border radius for carousel cells. |
+| arrows | boolean | true | Arrows for image navigation. |
+| arrowsOutside | boolean | false | Arrows on the outside of the carousel container. |
+| arrowsTheme | 'light', 'dark' | 'light' | Arrow color theme. |
 
 ## Browser support
 
-IvyPinch supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
+IvyCarousel supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.

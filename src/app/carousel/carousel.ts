@@ -4,6 +4,7 @@ export interface Properties {
     images: any;
     cellWidth: number;
     loop: boolean;
+    autoplayInterval: number;
     overflowCellsLimit: number;
     visibleWidth: number;
     margin: number;
@@ -39,17 +40,25 @@ export class Carousel {
     containerInitialPositionX: number;
     isContentImages: boolean = true;
     visibleWidth: number;
-    totalContainerCellsCount: number;
     isLazyLoad: boolean = true;
     isContainerLocked: boolean = true;
     alignCells: "left" | "center" = "left";
     initialContainerPosition: number = 0;
+    autoplayId: any;
 
     get cellLength() {
         if (this.images) {
             return this.images.length;
         } else {
             return this.cells.length;
+        }
+    }
+
+    get totalContainerCellsCount() {
+        if (this.images) {
+            return this.visibleCellsCount + this.overflowCellsLimit * 2;
+        } else {
+            return this.cellLength;
         }
     }
 
@@ -202,6 +211,10 @@ export class Carousel {
     getContainerPositionCorrection() {
         let correction = 0;
 
+        if (this.properties.loop) {
+            return 0;
+        }
+
         if ((this.cellLength - this.preliminarySlideCounter) < this.visibleCellsCount || this.isSlideLengthLimited) {
             if (this.visibleWidth < this.totalContainerCellsCount * this.fullCellWidth) {
                 correction = - (this.visibleCellsCount * this.fullCellWidth - this.visibleWidth - this.margin);
@@ -245,7 +258,6 @@ export class Carousel {
     }
 
     getContainerWidth() {
-        this.totalContainerCellsCount = this.visibleCellsCount + this.overflowCellsLimit * 2;
         let containerWidth = this.totalContainerCellsCount * this.fullCellWidth;
         let totalImageWidth = this.cellLength * this.fullCellWidth;
 
@@ -274,13 +286,7 @@ export class Carousel {
         const positionIndex = this.getPositionIndex(cellIndex);
         const numberLeftCells = (this.totalContainerCellsCount - 1) / 2;
         let imageIndex;
-        let counter;
-
-        if (this.properties.loop) {
-            counter = this.slideCounter % this.cellLength;
-        } else {
-            counter = this.slideCounter;
-        }
+        let counter = this.slideCounter;
 
         if (!this.isContainerLocked) {
             if (counter <= this.overflowCellsLimit) {
@@ -288,6 +294,11 @@ export class Carousel {
             } else {
                 let cellLimitOverflow = counter - this.overflowCellsLimit;
                 imageIndex = positionIndex + cellLimitOverflow;
+
+                if (this.images && this.properties.loop) {
+                    imageIndex = imageIndex % this.images.length;
+                }
+
                 return imageIndex;
             }
         }
@@ -452,7 +463,7 @@ export class Carousel {
     transformSlideEnd() {
         if (this.isLazyLoad) {
             this.setSlideCounter();
-            if (this.images) {
+            if (this.images || !this.images && this.properties.loop) {
                 this.quicklyPositionContainer();
             }
         }
@@ -523,19 +534,13 @@ export class Carousel {
     }
 
     getPositionIndex(cellIndex) {
-        let counter;
-
-        if (this.properties.loop) {
-            counter = this.slideCounter % this.cellLength;
-        } else {
-            counter = this.slideCounter;
-        }
-
+        let counter = this.slideCounter;
+        let cellLength = this.totalContainerCellsCount;
         let slideCounter = counter - this.overflowCellsLimit;
         let positionIndex;
 
-        if (slideCounter > this.totalContainerCellsCount) {
-            slideCounter = slideCounter % this.totalContainerCellsCount;
+        if (slideCounter > cellLength) {
+            slideCounter = slideCounter % cellLength;
         }
 
         if (slideCounter < 0) {
@@ -543,29 +548,30 @@ export class Carousel {
         } else {
             positionIndex = cellIndex - slideCounter;
             if (positionIndex < 0) {
-                positionIndex = this.totalContainerCellsCount + positionIndex;
+                positionIndex = cellLength + positionIndex;
             }
         }
 
         return positionIndex;
     }
 
-    get containerOverflowRightCount() {
-        let totalOverflowCellsCount = this.cellLength - this.totalContainerCellsCount;
-        let overflowRight = 0;
-
-        if (totalOverflowCellsCount > 0) {
-            overflowRight = totalOverflowCellsCount - (this.previousSlideCounter - this.overflowCellsLimit);
-
-            if (overflowRight > 0) {
-                return overflowRight;
-            }
-        }
-
-        return overflowRight;
-    }
-
     getCenterPositionIndex() {
         return (this.totalContainerCellsCount - 1) / 2;
+    }
+
+    autoplay() {
+        this.autoplayId = setInterval(() => {
+            this.next(); 
+        }, this.properties.autoplayInterval);
+    }
+
+    stopAutoplay() {
+        if (this.autoplayId) {
+            clearInterval(this.autoplayId);
+        }
+    }
+
+    destroy() {
+        this.stopAutoplay();
     }
 }
