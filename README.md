@@ -48,6 +48,10 @@ images = [
 ]
 ```
 
+## Lazy loading
+To use lazy loading, pass the carousel an array of images, as shown in the example above. Images will be uploaded only as needed, this will save you traffic. Using the `overflowCellsLimit` property, you can specify the number of images that will be loaded outside the visible area, which will allow the images to be loaded before they are displayed.
+<img src="http://ivylab.space/assets/img/carousel-lazy-loading.gif" />
+
 ## Properties
 
 | name | type | default | description |
