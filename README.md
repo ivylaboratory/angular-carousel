@@ -85,7 +85,11 @@ IvyCarousel supports the most recent two versions of all major browsers: Chrome 
 ## Roadmap
 
 `slidesToShow` - the number of cells to display, regardless of the width of the container.
+
 `centerMode` - center the cells inside the container (Pro version).
+
 `fade` - fade in and fade out animation.
+
 `adaptiveHeight` - the height of the container is set based on the height of the tallest cell currently visible.
+
 `groupCells` - the cells will behave as grouped, the group will include the number of visible cells that fit into the container area.
