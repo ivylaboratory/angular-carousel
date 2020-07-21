@@ -6,6 +6,8 @@ A simple solution for horizontal scrolling images with lazy loading.
 
 Live demo can be found on [home page](http://ivylab.space/carousel).
 
+🔬️ Help make IvyCarousel better by [answering a few questions](https://docs.google.com/forms/d/e/1FAIpQLSemPfIejDl3Pq4mFz32sFZgvLo7JbyXZPZFt4uDw9G4H92H8Q/viewform?usp=sf_link).
+
 ## Installation
 
 Install the npm package.
@@ -79,3 +81,11 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 ## Browser support
 
 IvyCarousel supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
+
+## Roadmap
+
+`slidesToShow` - the number of cells to display, regardless of the width of the container.
+`centerMode` - center the cells inside the container (Pro version).
+`fade` - fade in and fade out animation.
+`adaptiveHeight` - the height of the container is set based on the height of the tallest cell currently visible.
+`groupCells` - the cells will behave as grouped, the group will include the number of visible cells that fit into the container area.
