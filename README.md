@@ -78,6 +78,8 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | arrowsOutside | boolean | false | Arrows on the outside of the carousel container. |
 | arrowsTheme | 'light', 'dark' | 'light' | Arrow color theme. |
 
+The IvyCarousel also has a Pro version, with an [extended API](http://ivylab.space/carousel).
+
 ## Browser support
 
 IvyCarousel supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
