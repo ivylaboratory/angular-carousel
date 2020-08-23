@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to ivySwiperApp!');
+    expect(page.getTitleText()).toEqual('ivycarousel-ng10 app is running!');
   });
 
   afterEach(async () => {
@@ -18,6 +18,6 @@ describe('workspace-project App', () => {
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);
     expect(logs).not.toContain(jasmine.objectContaining({
       level: logging.Level.SEVERE,
-    }));
+    } as logging.Entry));
   });
 });
