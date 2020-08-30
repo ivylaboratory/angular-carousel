@@ -179,7 +179,6 @@ export class CarouselComponent implements OnDestroy {
         this.touches.on('touchend', this.handleTouchend);
         this.touches.on('mousedown', this.handleTouchstart);
         this.touches.on('mouseup', this.handleTouchend);
-        this.touches.on('tap', this.handleTap);
 
         this.initCarousel();
         this.setDimensions();
@@ -264,20 +263,12 @@ export class CarouselComponent implements OnDestroy {
         //event.preventDefault();
         this.carousel.handleTouchstart(event);
         this.isMoving = true;
-        this.events.emit({
-            type: 'touchstart',
-            event
-        });
     }
 
     /* Touchmove */
     handleHorizontalSwipe = (event: any) => {
         event.preventDefault();
         this.carousel.handleHorizontalSwipe(event);
-        this.events.emit({
-            type: 'swipe',
-            event
-        });
     }
 
     /* Touchend */
@@ -285,24 +276,6 @@ export class CarouselComponent implements OnDestroy {
         const touches = event.touches;
         this.carousel.handleTouchend(event);
         this.isMoving = false;
-        this.events.emit({
-            type: 'touchend',
-            event
-        });
-    }
-
-    /* Tap */
-    handleTap = (event: any) => {
-        const i = this.carousel.slideCounter;
-        const cellIndex = this.carousel.currentCellIndex;
-        const fileIndex = this.carousel.getFileIndex(i);
-        const file = this.carousel.getFile(cellIndex);
-
-        this.events.emit({
-            type: 'click',
-            file: file,
-            index: fileIndex
-        });
     }
 
     handleTransitionendCellContainer(event) {
