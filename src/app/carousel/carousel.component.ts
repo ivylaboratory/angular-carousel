@@ -261,7 +261,7 @@ export class CarouselComponent implements OnDestroy {
 
     /* Touchstart */
     handleTouchstart = (event: any) => {
-        event.preventDefault();
+        //event.preventDefault();
         this.carousel.handleTouchstart(event);
         this.isMoving = true;
         this.events.emit({
