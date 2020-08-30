@@ -194,19 +194,23 @@ export class CarouselComponent implements OnDestroy {
         this.dotsArr = Array(this.cellLength).fill(1);
         this.ref.detectChanges();
         this.carousel.lineUpCells();
+
+        /* Start detecting changes in the DOM tree */
+        this.detectDomChanges();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.width || changes.height) {
+        if (changes.width || changes.height || changes.images) {
             this.setDimensions();
             this.initCarousel();
             this.carousel.lineUpCells();
+            this.ref.detectChanges();
         }
     }
 
     ngOnDestroy() {
         this.touches.destroy();
-        this.carousel.destroy()
+        this.carousel.destroy();
     }
 
     initCarousel() {
@@ -225,6 +229,25 @@ export class CarouselComponent implements OnDestroy {
             transitionTimingFunction: this.transitionTimingFunction,
             videoProperties: this.videoProperties
         });
+    }
+
+    detectDomChanges() {
+        const observer = new MutationObserver((mutations) => {
+            this.onDomChanges();
+        });
+
+        var config = { 
+            attributes: true, 
+            childList: true, 
+            characterData: true 
+        };
+        observer.observe(this.elementRef.nativeElement, config);
+    }
+
+    onDomChanges() {
+        this.cellLength = this.getCellLength();
+        this.carousel.lineUpCells();
+        this.ref.detectChanges();
     }
 
     setDimensions() {

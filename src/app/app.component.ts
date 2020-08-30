@@ -85,7 +85,7 @@ export class AppComponent {
 
 	addImage() {
 		this.images.push({
-			path: '/assets/photo-1494391727071-33d8df6f13cf.jpg',
+			path: '/assets/10.jfif'
 		});
 	}
 
@@ -109,5 +109,9 @@ export class AppComponent {
 
 	select(index) {
 		this.myCarousel.select(index);
+	}
+
+	changeImagesArray() {
+		this.images = this.images2;
 	}
 }

@@ -1,10 +1,86 @@
 <div class="container">
-	<carousel
-		[images]="images">
+	<h2>Images in array</h2>
+	<div class="row">
+		<carousel
+			[images]="images">
+		</carousel>
+	</div>
+
+	<h3>objectFit contain</h3>
+	<div class="row">
+		<carousel
+			objectFit="contain"
+			[images]="images">
+		</carousel>
+	</div>
+
+	<h3>margin 0</h3>
+	<div class="row">
+		<carousel
+			[margin]="0"
+			[images]="images">
+		</carousel>
+	</div>
+
+	<h3>height 300</h3>
+	<div class="row">
+		<carousel
+			[height]="300"
+			[images]="images">
+		</carousel>
+	</div>
+</div>
+
+<div class="container">
+	<h2>Images in template</h2>
+	<carousel>
+	    <div class="carousel-cell">
+	        <img src="/assets/1.jfif">
+	    </div>
+	    <div class="carousel-cell">
+	        <img src="/assets/2.jpg">
+	    </div>
+	    <div class="carousel-cell">
+	        <img src="/assets/3.jpg">
+	    </div>
+	    <div class="carousel-cell">
+	        <img src="/assets/4.jfif">
+	    </div>
+	    <div class="carousel-cell">
+	        <img src="/assets/5.jpg">
+	    </div>
+	    <div class="carousel-cell">
+	        <img src="/assets/6.jpg">
+	    </div>
 	</carousel>
 </div>
 
 <div class="container">
+	<h2>HTML content in template</h2>
+	<carousel>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">1</div>
+	    </div>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">2</div>
+	    </div>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">3</div>
+	    </div>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">4</div>
+	    </div>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">5</div>
+	    </div>
+	    <div class="carousel-cell">
+	    	<div style="width: 100%; height: 100%; background: aliceblue;">6</div>
+	    </div>
+	</carousel>
+</div>
+
+<div class="container">
+	<h2>Full width cells</h2>
 	<carousel
 		[images]="images2"
 		[objectFit]="'cover'"
@@ -15,6 +91,20 @@
 		[autoplay]="true"
 		[dots]="true"
 		[loop]="true">
+	</carousel>
+</div>
+
+<div class="container">
+	<h2>Data change</h2>
+
+	<p>
+		<button (click)="changeImagesArray()">Change images array</button>
+		<!-- <button (click)="addImage()">Add image</button> -->
+	</p>
+
+	<carousel
+		[images]="images"
+		[counter]="true">
 	</carousel>
 </div>
 
