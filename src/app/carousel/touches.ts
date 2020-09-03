@@ -1,6 +1,9 @@
 export interface Properties {
     element: HTMLElement;
     listeners?: 'auto' | 'mouse and touch';
+    touchListeners?: any;
+    mouseListeners?: any;
+    otherListeners?: any;
     resize?: boolean;
 }
 
@@ -24,19 +27,31 @@ export class Touches {
     i: number = 0;
     isMousedown = false;
 
-    touchListeners: any = {
+    _touchListeners: any = {
         "touchstart": "handleTouchstart",
         "touchmove": "handleTouchmove",
         "touchend": "handleTouchend"
     }
-    mouseListeners: any = {
+    _mouseListeners: any = {
         "mousedown": "handleMousedown",
         "mousemove": "handleMousemove",
         "mouseup": "handleMouseup",
         "wheel": "handleWheel"
     }
-    otherListeners: any = {
+    _otherListeners: any = {
         "resize": "handleResize"
+    }
+
+    get touchListeners() {
+        return this.properties.touchListeners ? this.properties.touchListeners : this._touchListeners;
+    }
+
+    get mouseListeners() {
+        return this.properties.mouseListeners ? this.properties.mouseListeners : this._mouseListeners;
+    }
+
+    get otherListeners() {
+        return this.properties.otherListeners ? this.properties.otherListeners : this._otherListeners;
     }
 
     constructor(properties: Properties) {
@@ -93,6 +108,14 @@ export class Touches {
                 }
             }
         }
+    }
+
+    addEventListeners(listener: string, handler: string) {
+        window.addEventListener(listener, this[handler], false);
+    }
+
+    removeEventListeners(listener: string, handler: string) {
+        window.removeEventListener(listener, this[handler], false);
     }
 
     /*

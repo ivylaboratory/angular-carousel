@@ -171,7 +171,11 @@ export class CarouselComponent implements OnDestroy {
 
         this.touches = new Touches({
             element: this.cellsElement,
-            listeners: this.listeners
+            listeners: this.listeners,
+            mouseListeners: {
+                "mousedown": "handleMousedown",
+                "mouseup": "handleMouseup"
+            }
         });
 
         this.touches.on('touchstart', this.handleTouchstart);
@@ -261,6 +265,7 @@ export class CarouselComponent implements OnDestroy {
     /* Touchstart */
     handleTouchstart = (event: any) => {
         //event.preventDefault();
+        this.touches.addEventListeners("mousemove", "handleMousemove");
         this.carousel.handleTouchstart(event);
         this.isMoving = true;
     }
@@ -275,6 +280,7 @@ export class CarouselComponent implements OnDestroy {
     handleTouchend = (event: any) => {
         const touches = event.touches;
         this.carousel.handleTouchend(event);
+        this.touches.removeEventListeners("mousemove", "handleMousemove");
         this.isMoving = false;
     }
 
