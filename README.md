@@ -61,6 +61,8 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | height | number | | Carousel height. |
 | width | number | | Carousel Width. |
 | cellWidth | number, '100%' | 200 | Cell width. |
+| cellsToShow | number | | The number of carousel cells in the visible area. |
+| cellsToScroll | number | 1 | The number of carousel cells to scroll per arrow click. |
 | loop | boolean | false | Infinite loop. |
 | autoplay | boolean | false | Automatically start the carousel after initialization. |
 | autoplayInterval | number | 5000 | The interval between scrolling the carousel. Used together with autoplay. |
