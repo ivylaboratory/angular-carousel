@@ -104,6 +104,8 @@ export class CarouselComponent implements OnDestroy {
     @Input() counterSeparator: string = " / ";
     @Input() overflowCellsLimit: number = 3;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
+    @Input() cellsToShow: number;
+    @Input() cellsToScroll: number = 1;
 
     @Input('cellWidth') set cellWidth(value: number | '100%') {
         if (value){
@@ -309,21 +311,30 @@ export class CarouselComponent implements OnDestroy {
         return this.carousel.slideCounter;
     }
 
-    getCellWidth(): number {
+    getCellWidth() {
+        let elementWidth = this.elementRef.nativeElement.clientWidth;
+
+        if (this.cellsToShow) {
+            let margin = this.cellsToShow > 1 ? this.margin : 0;
+            let totalMargin = margin * (this.cellsToShow - 1);
+            return (elementWidth - totalMargin) / this.cellsToShow;
+        }
+
         if (this._cellWidth === '100%') {
-            return this.elementRef.nativeElement.clientWidth;
+
+            return elementWidth;
         } else {
             return this._cellWidth;
         }
     }
 
     next() {
-        this.carousel.next(1);
+        this.carousel.next(this.cellsToScroll);
         this.carousel.stopAutoplay();
     }
 
     prev() {
-        this.carousel.prev(1);
+        this.carousel.prev(this.cellsToScroll);
         this.carousel.stopAutoplay();
     }
 
