@@ -25,18 +25,23 @@ export class Carousel {
     initialPositionX: number = 0;
     cells: HTMLCollection;
 
-    newContainerPositionIndex: number = 0; // The index of the new position relative to the active index, for example -1 or +1
-    preliminarySlideCounter: number = 0;
-    slideCounter: number = 0; // Scrolling Index (counter)
-    previousSlideCounter: number = 0;
+    /* The index of the new position relative to the active index, for example -1 or +1 */
+    newContainerPositionIndex: number = 0;
 
+    preliminarySlideCounter: number = 0;
+
+    /* Scrolling Index (counter) */
+    slideCounter: number = 0;
+
+    previousSlideCounter: number = 0;
     isSlideInProgress: boolean;
     isMoveInProgress: boolean;
-    isTransitionInProgress: boolean;
     isTouchstart: boolean;
-    isSlideLengthLimited: boolean;
-    isContainerPositionCorrection: boolean;
 
+    /* The slide length has been limited by the limitSlideLength() method */
+    isSlideLengthLimited: boolean;
+
+    isContainerPositionCorrection: boolean;
     containerInitialPositionX: number;
     isContentImages: boolean = true;
     visibleWidth: number;
@@ -138,26 +143,34 @@ export class Carousel {
 
     handleTouchstart = (event: any) => {
         this.isTouchstart = true;
-
-        if (this.isSlideInProgress) {
-            return;
-        }
-
-        const touches = event.touches;
-        if (touches) {
-            this.startX = touches[0].clientX - this.getCarouselElementPosition()['left'];
-        } else {
-            this.startX = event.clientX - this.getCarouselElementPosition()['left'];
-        }
+        this.startX = this.getStartX(event);
         this.containerInitialPositionX = this.getElementPosition()['left'] - this.getCarouselElementPosition()['left'];
         this.isMoveInProgress = true;
+        this.stopTransformContainer();
+    }
+
+    stopTransformContainer() {
+        this.transformPositionX(this.containerInitialPositionX, 0);
+        this.setSlideCounter();
+        this.isSlideInProgress = false;
+        this.newContainerPositionIndex = 0;
+        this.isSlideLengthLimited = undefined;
+    }
+
+    getStartX(event: any) {
+        const touches = event.touches;
+        let startX;
+
+        if (touches) {
+            startX = touches[0].clientX - this.getCarouselElementPosition()['left'];
+        } else {
+            startX = event.clientX - this.getCarouselElementPosition()['left'];
+        }
+
+        return startX;
     }
 
     handleHorizontalSwipe = (event: any) => {
-        if (this.isSlideInProgress) {
-            return;
-        }
-
         const touches = event.touches;
         if (touches) {
             this.moveX = touches[0].clientX - this.getCarouselElementPosition()['left'];
@@ -171,7 +184,7 @@ export class Carousel {
     }
 
     handleTouchend = (event: any) => {
-        if (this.isSlideInProgress || !this.isTouchstart) {
+        if (!this.isTouchstart) {
             this.isTouchstart = false;
             return;
         }
@@ -219,6 +232,7 @@ export class Carousel {
         this.initialContainerPosition = position - correction;
     }
 
+    /* Offset the container to show the last cell completely */
     getContainerPositionCorrection() {
         let correction = 0;
 
@@ -339,22 +353,16 @@ export class Carousel {
         return this.distanceAbs >= this.minSwipeDistance;
     }
 
-    next() {
-        if (this.isSlideInProgress) {
-            return;
-        }
-
+    next(length: number = 1) {
+        this.newContainerPositionIndex = 0;
         this.direction = 'left';
-        this.handleSlide(1);
+        this.handleSlide(length);
     }
 
-    prev() {
-        if (this.isSlideInProgress) {
-            return;
-        }
-
+    prev(length: number = 1) {
+        this.newContainerPositionIndex = 0;
         this.direction = 'right';
-        this.handleSlide(1);
+        this.handleSlide(length);
     }
 
     select(index: number) {
@@ -362,53 +370,71 @@ export class Carousel {
         this.quicklyPositionContainer();
     }
 
-    handleSlide(slideLength: number = undefined): void {
-        this.slideLength = this.getSlideLength();
-        this.slideLength = slideLength ? slideLength : this.limitSlideLength(this.slideLength);
+    handleSlide(customSlideLength: number = undefined) {
+        let isUsingButton = customSlideLength;
 
-        if (this.direction === 'left' && !this.isSlideInProgress) {
-            this.preliminarySlideCounter = this.slideCounter + this.slideLength;
-
-            if (!this.detectLastSlide(this.slideCounter + this.slideLength)) {
-                this.newContainerPositionIndex = this.newContainerPositionIndex - this.slideLength;
-                this.isSlideInProgress = true;
-
-                if (this.isLazyLoad) {
-                    this.isContainerLocked = this.preliminarySlideCounter > this.overflowCellsLimit;
-
-                    if (this.detectContainerUnlock()) {
-                        this.isContainerLocked = false;
-                    }
-                }
-            }
+        if (isUsingButton && this.isSlideInProgress) {
+            return;
         }
 
-        if (this.direction === 'right' && !this.isSlideInProgress) {
-            if (this.slideCounter - this.slideLength < 0) {
-                this.slideLength = this.slideCounter;
-            }
+        this.slideLength = customSlideLength ? customSlideLength : this.limitSlideLength(this.getSlideLength());
 
-            this.preliminarySlideCounter = this.slideCounter - this.slideLength;
+        if (this.direction === 'left') {
+            this.handleLeftSlide();
+        }
 
-            if (!this.isFirstCell) {
-                this.newContainerPositionIndex = this.newContainerPositionIndex + this.slideLength;
-                this.isSlideInProgress = true;
-
-                if (this.isLazyLoad) {
-                    if (this.preliminarySlideCounter > this.overflowCellsLimit) {
-                        this.isContainerLocked = true;
-                    } else {
-                        this.isContainerLocked = false;
-                    }
-
-                    if (this.detectContainerUnlock()) {
-                        this.isContainerLocked = false;
-                    }
-                }
-            }
+        if (this.direction === 'right') {
+            this.handleRightSlide();
         }
 
         this.alignContainer();
+    }
+
+    handleLeftSlide() {
+        this.preliminarySlideCounter = this.slideCounter + this.slideLength;
+        let isLastSlide = this.detectLastSlide(this.slideCounter + this.slideLength);
+
+        if (!isLastSlide) {
+            this.newContainerPositionIndex = this.newContainerPositionIndex - this.slideLength;
+            this.isSlideInProgress = true;
+
+            if (this.isLazyLoad) {
+                this.isContainerLocked = this.preliminarySlideCounter > this.overflowCellsLimit;
+
+                if (this.detectContainerUnlock()) {
+                    this.isContainerLocked = false;
+                }
+            }
+        } else {
+            this.slideLength = 0;
+        }
+    }
+
+    handleRightSlide() {
+        if (this.slideCounter - this.slideLength < 0) {
+            this.slideLength = this.slideCounter;
+        }
+
+        this.preliminarySlideCounter = this.slideCounter - this.slideLength;
+
+        if (!this.isFirstCell) {
+            this.newContainerPositionIndex = this.newContainerPositionIndex + this.slideLength;
+            this.isSlideInProgress = true;
+
+            if (this.isLazyLoad) {
+                if (this.preliminarySlideCounter > this.overflowCellsLimit) {
+                    this.isContainerLocked = true;
+                } else {
+                    this.isContainerLocked = false;
+                }
+
+                if (this.detectContainerUnlock()) {
+                    this.isContainerLocked = false;
+                }
+            }
+        } else {
+            this.slideLength = 0;
+        }
     }
 
     getSlideLength() {
@@ -421,6 +447,10 @@ export class Carousel {
         return length;
     }
 
+    /*  
+     * Limits the length of the slide during calls to the next() and prev() 
+     * methods if the specified position is outside the cell length 
+     */
     limitSlideLength(slideLength: number) {
         if (slideLength > 1) {
 

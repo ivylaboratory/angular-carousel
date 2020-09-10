@@ -29,6 +29,22 @@
 			[images]="images">
 		</carousel>
 	</div>
+
+	<h3>3 cells to show</h3>
+	<div class="row">
+		<carousel
+			[cellsToShow]="3"
+			[images]="images">
+		</carousel>
+	</div>
+
+	<h3>2 cells to scroll</h3>
+	<div class="row">
+		<carousel
+			[cellsToScroll]="2"
+			[images]="images">
+		</carousel> 
+	</div>
 </div>
 
 <div class="container">
@@ -103,8 +119,7 @@
 	</p>
 
 	<carousel
-		[images]="images"
-		[counter]="true">
+		[images]="images">
 	</carousel>
 </div>
 

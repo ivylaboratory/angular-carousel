@@ -61,7 +61,7 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | height | number | | Carousel height. |
 | width | number | | Carousel Width. |
 | cellWidth | number, '100%' | 200 | Cell width. |
-| cellsToShow | number | | The number of carousel cells in the visible area. |
+| cellsToShow | number | | The number of cells to display, regardless of the width of the container. |
 | cellsToScroll | number | 1 | The number of carousel cells to scroll per arrow click. |
 | loop | boolean | false | Infinite loop. |
 | autoplay | boolean | false | Automatically start the carousel after initialization. |
@@ -70,9 +70,9 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | dots | boolean | false | Carousel progress bar. |
 | overflowCellsLimit | number | 3 | The number of carousel cells that will be stored for in the DOM tree outside the scope. |
 | margin | number | 10 | Cell spacing. |
-| minSwipeDistance | number | 50 | Minimum distance for swipe. |
-| transitionDuration | number | 200 | Animation duration. |
-| transitionTimingFunction | 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear' | 'ease' | Smooth animation function. |
+| minSwipeDistance | number | 10 | Minimum distance for swipe. |
+| transitionDuration | number | 300 | Animation duration. |
+| transitionTimingFunction | 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear' | 'ease-in-out' | Smooth animation function. |
 | counter | boolean | false | Counter. |
 | counterSeparator | string | " / " | Counter separator. |
 | borderRadius | number | 0 | Border radius for carousel cells. |
@@ -88,12 +88,8 @@ IvyCarousel supports the most recent two versions of all major browsers: Chrome 
 
 ## Roadmap
 
-`slidesToShow` - the number of cells to display, regardless of the width of the container.
-
 `centerMode` - center the cells inside the container (Pro version).
 
 `fade` - fade in and fade out animation.
 
 `adaptiveHeight` - the height of the container is set based on the height of the tallest cell currently visible.
-
-`groupCells` - the cells will behave as grouped, the group will include the number of visible cells that fit into the container area.

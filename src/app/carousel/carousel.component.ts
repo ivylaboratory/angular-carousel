@@ -97,7 +97,7 @@ export class CarouselComponent implements OnDestroy {
     @Input() borderRadius: number;
     @Input() margin: number = 10;
     @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
-    @Input() minSwipeDistance: number = 50;
+    @Input() minSwipeDistance: number = 10;
     @Input() transitionDuration: number = 200;
     @Input() transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' = 'ease';
     @Input() videoProperties: any;
