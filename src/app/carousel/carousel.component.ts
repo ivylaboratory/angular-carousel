@@ -3,54 +3,53 @@ import {ChangeDetectorRef, Component, ElementRef, ViewChild, EventEmitter, HostB
 import {Images} from './interfaces';
 import {Touches} from './touches';
 import {Carousel} from './carousel';
+import {Container} from './container';
+import {Cells} from './cells';
+import {Slide} from './slide';
+import {Utils} from './utils';
 
 
 @Component({
-	selector: 'carousel, [carousel]',
-    exportAs: 'carousel',
-	templateUrl: './carousel.component.html',
+    selector: 'carousel, [carousel]',
+    templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.sass']
 })
 
 export class CarouselComponent implements OnDestroy {
-
-    get isContainerLocked() {
-        return this.carousel.isContainerLocked;
-    }
-    get slideCounter() {
-        return this.carousel.slideCounter;
-    }
-    get previousSlideCounter() {
-        return this.carousel.previousSlideCounter;
-    }
-    get lapCounter() {
-        return this.carousel.lapCounter;
-    }
-
-    lineUpCells() {
-        this.carousel.lineUpCells();
-    }
-
-    quicklyPositionContainer() {
-        this.carousel.quicklyPositionContainer();
-    }
-    
+    carousel;
+    container;
+    utils;
+    cells;
+    slide;
     _id: string;
     _images: Images;
     touches: any;
-    carousel: any;
     landscapeMode: any;
     minTimeout = 30;
     isVideoPlaying: boolean;
     _isCounter: boolean;
     _width: number;
     _cellWidth: number | '100%' = 200;
+    _loop: boolean = false;
+    _lightDOM: boolean = false;
     isMoving: boolean;
     isNgContent: boolean;
     cellLength: number;
-    dotsArr:any;
+    dotsArr: any;
 
-    get isLandscape(){
+    get isContainerLocked() {
+        return this.carousel.isContainerLocked;
+    }
+
+    get slideCounter() {
+        return this.carousel.slideCounter;
+    }
+
+    get lapCounter() {
+        return this.carousel.lapCounter;
+    }
+
+    get isLandscape() {
         return window.innerWidth > window.innerHeight;
     }
 
@@ -77,19 +76,29 @@ export class CarouselComponent implements OnDestroy {
         return this.elementRef.nativeElement.querySelector('.carousel-cells');
     }
 
-    @Input()
-    set images(images: Images & any) {
-        this._images = images;
-    }
-    get images(){
-        return this._images;
+    get isArrows() {
+        return this.arrows && !this.freeScroll;
     }
 
-    @Output() events: EventEmitter<any> = new EventEmitter<any>();
+    get isCounter() {
+        return this._isCounter && this.cellLength > 1;
+    }
 
+    get activeDotIndex() {
+        return this.slideCounter % this.cellLength;
+    }
+
+    get cellLimit() {
+        if (this.carousel) {
+            return this.carousel.cellLimit;
+        }
+    }
+
+    @Output() events: EventEmitter < any > = new EventEmitter < any > ();
+
+    @Input() id: number;
     @Input() height: number = 200;
     @Input() width: number;
-    @Input() loop: boolean = false;
     @Input() autoplay: boolean = false;
     @Input() autoplayInterval: number = 5000;
     @Input() pauseOnHover: boolean = true;
@@ -99,40 +108,63 @@ export class CarouselComponent implements OnDestroy {
     @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
     @Input() minSwipeDistance: number = 10;
     @Input() transitionDuration: number = 200;
-    @Input() transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' = 'ease';
+    @Input() transitionTimingFunction: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' = 'ease-out';
     @Input() videoProperties: any;
     @Input() counterSeparator: string = " / ";
     @Input() overflowCellsLimit: number = 3;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
     @Input() cellsToShow: number;
     @Input() cellsToScroll: number = 1;
+    @Input() freeScroll: boolean = false;
+    @Input() arrows: boolean = true;
+    @Input() arrowsOutside: boolean;
+    @Input() arrowsTheme: 'light' | 'dark' = 'light';
+
+    @Input()
+    set images(images: Images & any) {
+        this._images = images;
+    }
+    get images() {
+        return this._images;
+    }
 
     @Input('cellWidth') set cellWidth(value: number | '100%') {
-        if (value){
+        if (value) {
             this._cellWidth = value;
         }
     }
 
     @Input('counter') set isCounter(value: boolean) {
-        if (value){
+        if (value) {
             this._isCounter = value;
         }
     }
-    get isCounter() {
-        return this._isCounter && this.cellLength > 1;
+
+    @Input('loop') set loop(value: boolean) {
+        if (value) {
+            this._loop = value;
+        }
     }
 
-    get activeDotIndex() {
-        return this.slideCounter % this.cellLength;
+    get loop() {
+        if (this.images) {
+            return this._loop;
+        } else {
+            return false;
+        }
     }
 
-    @Input() arrows: boolean = true;
-    @Input() arrowsOutside: boolean;
-    @Input() arrowsTheme: 'light' | 'dark' = 'light';
+    @Input('lightDOM') set lightDOM(value: boolean) {
+        if (value) {
+            this._lightDOM = value;
+        }
+    }
 
-    get cellLimit() {
-        if (this.carousel) {
-            return this.carousel.cellLimit;
+    get lightDOM() {
+        if (this.images) {
+            return this._lightDOM;
+        } else {
+            return false;
         }
     }
 
@@ -164,11 +196,12 @@ export class CarouselComponent implements OnDestroy {
     }
 
     constructor(
-        private elementRef: ElementRef, 
-        private ref: ChangeDetectorRef){
+        private elementRef: ElementRef,
+        private ref: ChangeDetectorRef) {
+
     }
 
-    ngOnInit(){
+    ngOnInit() {
         this.isNgContent = this.cellsElement.children.length > 0;
 
         this.touches = new Touches({
@@ -185,16 +218,18 @@ export class CarouselComponent implements OnDestroy {
         this.touches.on('touchend', this.handleTouchend);
         this.touches.on('mousedown', this.handleTouchstart);
         this.touches.on('mouseup', this.handleTouchend);
+        this.touches.on('tap', this.handleTap);
 
-        this.initCarousel();
         this.setDimensions();
+    }
+
+    ngAfterViewInit() {
+        this.initCarousel();
 
         if (this.autoplay) {
             this.carousel.autoplay();
         }
-    }
 
-    ngAfterViewInit() {
         this.cellLength = this.getCellLength();
         this.dotsArr = Array(this.cellLength).fill(1);
         this.ref.detectChanges();
@@ -215,13 +250,14 @@ export class CarouselComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.touches.destroy();
-        this.carousel.destroy();
+        //this.carousel.destroy();
     }
 
     initCarousel() {
-        this.carousel = new Carousel({
-            element: this.elementRef.nativeElement.querySelector('.carousel-cells'),
-            container: this.elementRef.nativeElement,
+        let carouselProperties = {
+            id: this.id,
+            cellsElement: this.elementRef.nativeElement.querySelector('.carousel-cells'),
+            hostElement: this.elementRef.nativeElement,
             images: this.images,
             cellWidth: this.getCellWidth(),
             loop: this.loop,
@@ -232,8 +268,17 @@ export class CarouselComponent implements OnDestroy {
             minSwipeDistance: this.minSwipeDistance,
             transitionDuration: this.transitionDuration,
             transitionTimingFunction: this.transitionTimingFunction,
-            videoProperties: this.videoProperties
-        });
+            videoProperties: this.videoProperties,
+            eventHandler: this.events,
+            freeScroll: this.freeScroll,
+            lightDOM: this.lightDOM
+        };
+
+        this.utils = new Utils(carouselProperties);
+        this.cells = new Cells(carouselProperties, this.utils);
+        this.container = new Container(carouselProperties, this.utils, this.cells);
+        this.slide = new Slide(carouselProperties, this.utils, this.cells, this.container);
+        this.carousel = new Carousel(carouselProperties, this.utils, this.cells, this.container, this.slide);
     }
 
     detectDomChanges() {
@@ -241,10 +286,10 @@ export class CarouselComponent implements OnDestroy {
             this.onDomChanges();
         });
 
-        var config = { 
-            attributes: true, 
-            childList: true, 
-            characterData: true 
+        var config = {
+            attributes: true,
+            childList: true,
+            characterData: true
         };
         observer.observe(this.elementRef.nativeElement, config);
     }
@@ -260,11 +305,10 @@ export class CarouselComponent implements OnDestroy {
         this.hostStyleWidth = this.width + 'px';
     }
 
-    getFile(index) {
-        return this.carousel.getFile(index);
+    getImage(index) {
+        return this.carousel.getImage(index);
     }
 
-    /* Touchstart */
     handleTouchstart = (event: any) => {
         //event.preventDefault();
         this.touches.addEventListeners("mousemove", "handleMousemove");
@@ -272,13 +316,11 @@ export class CarouselComponent implements OnDestroy {
         this.isMoving = true;
     }
 
-    /* Touchmove */
     handleHorizontalSwipe = (event: any) => {
         event.preventDefault();
         this.carousel.handleHorizontalSwipe(event);
     }
 
-    /* Touchend */
     handleTouchend = (event: any) => {
         const touches = event.touches;
         this.carousel.handleTouchend(event);
@@ -286,8 +328,25 @@ export class CarouselComponent implements OnDestroy {
         this.isMoving = false;
     }
 
+    handleTap = (event: any) => {
+        let outboundEvent: any = {
+            name: 'click'
+        }
+        let nodes = Array.prototype.slice.call(this.cellsElement.children);
+        let cellElement = event.srcElement.closest(".carousel-cell");
+        const i = nodes.indexOf(cellElement);
+        const cellIndex = nodes.indexOf(cellElement);
+
+        if (this.images) {
+            //outboundEvent.fileIndex = this.carousel.getFileIndex(i);
+            //outboundEvent.file = this.carousel.getFile(cellIndex);
+        } else {
+            outboundEvent.cellIndex = cellIndex;
+        }
+    }
+
     handleTransitionendCellContainer(event) {
-        this.carousel.handleSlideEnd();
+        this.carousel.handleTransitionend();
     }
 
     toggleVideo(video) {
@@ -307,10 +366,6 @@ export class CarouselComponent implements OnDestroy {
         this.ref.detectChanges();
     }
 
-    getCurrentIndex() {
-        return this.carousel.slideCounter;
-    }
-
     getCellWidth() {
         let elementWidth = this.elementRef.nativeElement.clientWidth;
 
@@ -321,7 +376,6 @@ export class CarouselComponent implements OnDestroy {
         }
 
         if (this._cellWidth === '100%') {
-
             return elementWidth;
         } else {
             return this._cellWidth;
@@ -338,16 +392,16 @@ export class CarouselComponent implements OnDestroy {
         this.carousel.stopAutoplay();
     }
 
-    select(index: number) {
-        this.carousel.select(index);
-    }
-
     isNextArrowDisabled() {
-        return this.carousel.isNextArrowDisabled();
+        if (this.carousel) {
+            return this.carousel.isNextArrowDisabled();
+        }
     }
 
     isPrevArrowDisabled() {
-        return this.carousel.isPrevArrowDisabled();
+        if (this.carousel) {
+            return this.carousel.isPrevArrowDisabled();
+        }
     }
 
     getCellLength() {

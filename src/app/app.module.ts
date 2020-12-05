@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 
 //import { IvyCarouselModule } from 'angular-responsive-carousel';
 import { IvyCarouselModule } from './carousel/carousel.module';
-import { PinchZoomModule } from 'ngx-pinch-zoom';
 
 @NgModule({
   declarations: [
@@ -15,8 +14,7 @@ import { PinchZoomModule } from 'ngx-pinch-zoom';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    IvyCarouselModule,
-    PinchZoomModule
+    IvyCarouselModule
   ],
   providers: [],
   bootstrap: [AppComponent]

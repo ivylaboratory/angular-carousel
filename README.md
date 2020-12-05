@@ -64,11 +64,13 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | cellsToShow | number | | The number of cells to display, regardless of the width of the container. |
 | cellsToScroll | number | 1 | The number of carousel cells to scroll per arrow click. |
 | loop | boolean | false | Infinite loop. |
+| lightDOM | boolean | false | Keep a limited number of cells in the DOM tree for an unlimited number of images. As the carousel scrolls, the images will be lazy loaded. This allows you not to overload the browser memory. This mode works only with images passed as an array. |
+| overflowCellsLimit | number | 3 | The number of carousel cells that will be stored for in the DOM tree outside the scope. |
+| freeScroll | boolean | false | The carousel will stop where the touch ended and will not automatically align. |
 | autoplay | boolean | false | Automatically start the carousel after initialization. |
 | autoplayInterval | number | 5000 | The interval between scrolling the carousel. Used together with autoplay. |
 | pauseOnHover | boolean | true | Stops autoplay if the cursor is over the carousel area. |
 | dots | boolean | false | Carousel progress bar. |
-| overflowCellsLimit | number | 3 | The number of carousel cells that will be stored for in the DOM tree outside the scope. |
 | margin | number | 10 | Cell spacing. |
 | minSwipeDistance | number | 10 | Minimum distance for swipe. |
 | transitionDuration | number | 300 | Animation duration. |

@@ -6,31 +6,16 @@
 
 		<ng-template ngFor let-image [ngForOf]="images" let-i="index">
 			<div class="carousel-cell" 
-				*ngIf="i < cellLimit" 
 				[style.width]="getCellWidth()+'px'"
-				[style.border-radius]="borderRadius+'px'">
-
+				[style.border-radius]="borderRadius+'px'"
+				*ngIf="i < cellLimit">
 				<!-- Image -->
 				<img 
-					*ngIf="getFile(i) && getFile(i)['image']" 
-					[src]="getFile(i)['image']['path']"
+					*ngIf="getImage(i) && getImage(i)['image']" 
+					[src]="getImage(i)['image']['path']"
 					[style.object-fit]="objectFit"
 					draggable="false" />
 
-				<!-- Video -->
-				<ng-template [ngIf]="getFile(i) && getFile(i)['type'] === 'video'">
-					<div class="carousel-play" (click)="toggleVideo(video)"></div>
-
-					<video #video
-						[loop]="videoProperties.loop"
-						[muted]="videoProperties.muted"
-						[controls]="isSafari"
-						[style.object-fit]="objectFit"
-						[style.border-radius]="borderRadius+'px'">
-						
-						<source [src]="getFile(i)['path']" type="video/mp4">
-					</video>
-				</ng-template>
 			</div>
 		</ng-template>
 	</div>
@@ -43,7 +28,7 @@
 <div class="carousel-arrows" 
 	[class.carousel-arrows-outside]="arrowsOutside" 
 	[class.carousel-dark-arrows]="arrowsTheme === 'dark'"
-	*ngIf="arrows">
+	*ngIf="isArrows">
 	
 	<div class="carousel-arrow carousel-arrow-prev" [class.carousel-arrow-disabled]="isPrevArrowDisabled()" (click)="prev()"></div>
 	<div class="carousel-arrow carousel-arrow-next" [class.carousel-arrow-disabled]="isNextArrowDisabled()" (click)="next()"></div>

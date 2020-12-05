@@ -18,7 +18,7 @@
     "@angular/platform-browser": "~10.0.3",
     "@angular/platform-browser-dynamic": "~10.0.3",
     "@angular/router": "~10.0.3",
-    "angular-responsive-carousel": "^1.2.9",
+    "angular-responsive-carousel": "^1.5.11",
     "ngx-pinch-zoom": "^2.4.4",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
