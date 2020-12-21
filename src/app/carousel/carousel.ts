@@ -142,7 +142,9 @@ export class Carousel {
     }
 
     next(length: number = 1) {
+      if (!this.isNextArrowDisabled()) {
         this.slide.next(length);
+      }
     }
 
     prev(length: number = 1) {
