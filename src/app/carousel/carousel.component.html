@@ -5,13 +5,13 @@
 		<ng-content></ng-content>
 
 		<ng-template ngFor let-image [ngForOf]="images" let-i="index">
-			<div class="carousel-cell" 
+			<div class="carousel-cell"
 				[style.width]="getCellWidth()+'px'"
 				[style.border-radius]="borderRadius+'px'"
 				*ngIf="i < cellLimit">
 				<!-- Image -->
-				<img 
-					*ngIf="getImage(i) && getImage(i)['image']" 
+				<img
+					*ngIf="getImage(i) && getImage(i)['image']"
 					[src]="getImage(i)['image']['path']"
 					[style.object-fit]="objectFit"
 					draggable="false" />
@@ -25,11 +25,11 @@
 	</div>
 </div>
 
-<div class="carousel-arrows" 
-	[class.carousel-arrows-outside]="arrowsOutside" 
+<div class="carousel-arrows"
+	[class.carousel-arrows-outside]="arrowsOutside"
 	[class.carousel-dark-arrows]="arrowsTheme === 'dark'"
 	*ngIf="isArrows">
-	
-	<div class="carousel-arrow carousel-arrow-prev" [class.carousel-arrow-disabled]="isPrevArrowDisabled()" (click)="prev()"></div>
-	<div class="carousel-arrow carousel-arrow-next" [class.carousel-arrow-disabled]="isNextArrowDisabled()" (click)="next()"></div>
+
+  <button class="carousel-arrow carousel-arrow-prev" [class.carousel-arrow-disabled]="isPrevArrowDisabled()" [disabled]="isPrevArrowDisabled()" (click)="prev()"></button>
+  <button class="carousel-arrow carousel-arrow-next" [class.carousel-arrow-disabled]="isNextArrowDisabled()" [disabled]="isNextArrowDisabled()" (click)="next()"></button>
 </div>
