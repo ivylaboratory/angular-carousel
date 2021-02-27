@@ -37,15 +37,7 @@ export class Carousel {
     }
 
     get overflowCellsLimit() {
-        if (this.images && this.isImagesLessCellLimit) {
-            return Math.floor((this.images.length - this.visibleCellsCount) / 2);
-        } else {
-            return this.properties.overflowCellsLimit;
-        }
-    }
-
-    get isImagesLessCellLimit() {
-        return this.properties.overflowCellsLimit * 2 + this.visibleCellsCount > this.images.length;
+        return this.utils.overflowCellsLimit;
     }
 
     get cellLimit() {

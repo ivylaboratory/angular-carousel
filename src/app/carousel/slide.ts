@@ -48,7 +48,7 @@ export class Slide {
     }
 
     get overflowCellsLimit() {
-        return this.carouselProperties.overflowCellsLimit;
+        return this.utils.overflowCellsLimit;
     }
 
     get images() {

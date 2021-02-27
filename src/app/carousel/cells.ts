@@ -49,7 +49,7 @@ export class Cells {
 
     get cellLengthInLightDOMMode() {
         if (this.images) {
-            let cellLength = this.visibleCellsCount + this.utils.overflowCellsLimit * 2;
+            let cellLength = this.visibleCellsCount + this.overflowCellsLimit * 2;
             if (cellLength > this.images.length) {
                 cellLength = this.images.length;
             }
@@ -64,7 +64,7 @@ export class Cells {
     }
 
     get overflowCellsLimit() {
-        return this.carouselProperties.overflowCellsLimit;
+        return this.utils.overflowCellsLimit;
     }
 
     get isLightDOM() {
@@ -120,7 +120,7 @@ export class Cells {
         }
 
         let cellLength = this.cellLengthInLightDOMMode;
-        let counter = this.counter - this.carouselProperties.overflowCellsLimit;
+        let counter = this.counter - this.overflowCellsLimit;
 
         if (counter > cellLength) {
             counter = counter % cellLength;
@@ -159,10 +159,9 @@ export class Cells {
     getImageIndex(cellIndexInDOMTree: number) {
         const positionIndex = this.getCellIndexInContainer(cellIndexInDOMTree);
         let imageIndex;
-        let overflowCellsLimit = this.carouselProperties.overflowCellsLimit;
 
-        if (this.counter > overflowCellsLimit) {
-            let cellLimitOverflow = this.counter - overflowCellsLimit;
+        if (this.counter > this.overflowCellsLimit) {
+            let cellLimitOverflow = this.counter - this.overflowCellsLimit;
             imageIndex = positionIndex + cellLimitOverflow;
 
             if (this.images && this.carouselProperties.loop) {
