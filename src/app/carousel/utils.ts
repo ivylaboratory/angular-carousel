@@ -8,7 +8,13 @@ export class Utils {
 
     get overflowCellsLimit() {
         if (this.images && this.isImagesLessCellLimit) {
-            return Math.floor((this.images.length - this.visibleCellsCount) / 2);
+            let overflowCellsLimit = Math.floor((this.images.length - this.visibleCellsCount) / 2);
+
+            if (overflowCellsLimit < 0) {
+                overflowCellsLimit = 0;
+            }
+            
+            return overflowCellsLimit;
         } else {
             return this.carouselProperties.overflowCellsLimit;
         }

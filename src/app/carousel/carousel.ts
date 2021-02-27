@@ -42,7 +42,13 @@ export class Carousel {
 
     get cellLimit() {
         if (this.isLightDOM) {
-            return this.visibleCellsCount + this.overflowCellsLimit * 2;
+            let cellLimit = this.visibleCellsCount + this.overflowCellsLimit * 2;
+
+            if (cellLimit < this.visibleCellsCount) {
+                cellLimit = this.visibleCellsCount;
+            }
+
+            return cellLimit;
         } else {
             return this.properties.images.length;
         }

@@ -376,7 +376,7 @@ export class Slide {
     }
 
     isNextArrowDisabled() {
-        return this.isLastSlide(this.counter);
+        return this.isLastSlide(this.counter) || this.cellLength <= this.visibleCellsCount;
     }
 
     isPrevArrowDisabled() {
