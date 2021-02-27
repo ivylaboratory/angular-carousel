@@ -79,6 +79,11 @@ export class Slide {
         this.init();
     }
 
+    updateProperties(carouselProperties: CarouselProperties) {
+        this.carouselProperties = carouselProperties;
+        this.setVisibleWidth();
+    }
+
     init() {
         this.visibleWidth = this.carouselProperties.visibleWidth || this.carouselProperties.hostElement.clientWidth;
     }
@@ -482,5 +487,9 @@ export class Slide {
         }
 
         return flag;
+    }
+
+    setVisibleWidth() {
+        this.visibleWidth = this.carouselProperties.visibleWidth || this.carouselProperties.hostElement.clientWidth;
     }
 }

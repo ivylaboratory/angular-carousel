@@ -34,6 +34,10 @@ export class Utils {
 
     }
 
+    updateProperties(carouselProperties: CarouselProperties) {
+        this.carouselProperties = carouselProperties;
+    }
+
     getStartX(event: any) {
         const touches = event.touches;
         const carouselElementPosition = this.getCarouselElementPosition()['left'];

@@ -106,9 +106,17 @@ export class Carousel {
         this.init();
     }
 
+    updateProperties(properties: Properties) {
+        this.properties = properties;
+    }
+
     init() {
         this.cellsElement = this.properties.cellsElement;
         this.visibleWidth = this.properties.visibleWidth || this.cellsElement.parentElement.clientWidth;
+    }
+
+    destroy() {
+        clearInterval(this.autoplayId);
     }
 
     lineUpCells() {
@@ -142,7 +150,9 @@ export class Carousel {
     }
 
     next(length: number = 1) {
-        this.slide.next(length);
+        if (!this.isNextArrowDisabled()) {
+            this.slide.next(length);
+        }
     }
 
     prev(length: number = 1) {

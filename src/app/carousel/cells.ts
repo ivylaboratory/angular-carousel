@@ -78,6 +78,10 @@ export class Cells {
         this.init(carouselProperties);
     }
 
+    updateProperties(carouselProperties: CarouselProperties) {
+        this.carouselProperties = carouselProperties;
+    }
+
     lineUp() {
         const cells = this.element.children;
         this.imageUtils.cellStack = [];

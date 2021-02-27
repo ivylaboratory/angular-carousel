@@ -94,6 +94,10 @@ export class Container {
         this.init()
     }
 
+    updateProperties(carouselProperties: CarouselProperties) {
+        this.carouselProperties = carouselProperties;
+    }
+
     init() {
         this.setWidth();
     }

@@ -7,6 +7,7 @@ import {Container} from './container';
 import {Cells} from './cells';
 import {Slide} from './slide';
 import {Utils} from './utils';
+import {Properties as CarouselProperties} from './interfaces';
 
 
 @Component({
@@ -36,17 +37,25 @@ export class CarouselComponent implements OnDestroy {
     isNgContent: boolean;
     cellLength: number;
     dotsArr: any;
+    carouselProperties: CarouselProperties;
+    savedCarouselWidth: number;
 
     get isContainerLocked() {
-        return this.carousel.isContainerLocked;
+        if (this.carousel) {
+            return this.carousel.isContainerLocked;
+        }
     }
 
     get slideCounter() {
-        return this.carousel.slideCounter;
+        if (this.carousel) {
+            return this.carousel.slideCounter;
+        }
     }
 
     get lapCounter() {
-        return this.carousel.lapCounter;
+        if (this.carousel) {
+            return this.carousel.lapCounter;
+        }
     }
 
     get isLandscape() {
@@ -92,6 +101,10 @@ export class CarouselComponent implements OnDestroy {
         if (this.carousel) {
             return this.carousel.cellLimit;
         }
+    }
+
+    get carouselWidth() {
+        return this.elementRef.nativeElement.clientWidth;
     }
 
     @Output() events: EventEmitter < any > = new EventEmitter < any > ();
@@ -174,11 +187,9 @@ export class CarouselComponent implements OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     onWindowResize(event: any) {
-        this.landscapeMode = this.isLandscape;
-        this.ref.detectChanges();
-
-        this.initCarousel();
-        this.carousel.lineUpCells();
+        if (this.utils.visibleWidth !== this.savedCarouselWidth) {
+            this.resize();
+        }
     }
 
     @HostListener('mousemove', ['$event'])
@@ -234,6 +245,7 @@ export class CarouselComponent implements OnDestroy {
         this.dotsArr = Array(this.cellLength).fill(1);
         this.ref.detectChanges();
         this.carousel.lineUpCells();
+        this.savedCarouselWidth = this.carouselWidth;
 
         /* Start detecting changes in the DOM tree */
         this.detectDomChanges();
@@ -254,7 +266,7 @@ export class CarouselComponent implements OnDestroy {
     }
 
     initCarousel() {
-        let carouselProperties = {
+        this.carouselProperties = {
             id: this.id,
             cellsElement: this.elementRef.nativeElement.querySelector('.carousel-cells'),
             hostElement: this.elementRef.nativeElement,
@@ -274,11 +286,30 @@ export class CarouselComponent implements OnDestroy {
             lightDOM: this.lightDOM
         };
 
-        this.utils = new Utils(carouselProperties);
-        this.cells = new Cells(carouselProperties, this.utils);
-        this.container = new Container(carouselProperties, this.utils, this.cells);
-        this.slide = new Slide(carouselProperties, this.utils, this.cells, this.container);
-        this.carousel = new Carousel(carouselProperties, this.utils, this.cells, this.container, this.slide);
+        this.utils = new Utils(this.carouselProperties);
+        this.cells = new Cells(this.carouselProperties, this.utils);
+        this.container = new Container(this.carouselProperties, this.utils, this.cells);
+        this.slide = new Slide(this.carouselProperties, this.utils, this.cells, this.container);
+        this.carousel = new Carousel(this.carouselProperties, this.utils, this.cells, this.container, this.slide);
+    
+        if (this.autoplay) {
+            this.carousel.autoplay();
+        }
+    }
+
+    resize() {
+        this.landscapeMode = this.isLandscape;
+        this.savedCarouselWidth = this.carouselWidth;
+
+        this.carouselProperties.cellWidth = this.getCellWidth();
+        this.cells.updateProperties(this.carouselProperties);
+        this.carousel.updateProperties(this.carouselProperties);
+        this.container.updateProperties(this.carouselProperties);
+        this.slide.updateProperties(this.carouselProperties);
+        this.utils.updateProperties(this.carouselProperties);
+        this.carousel.lineUpCells();
+        this.slide.select(0);
+        this.ref.detectChanges();
     }
 
     detectDomChanges() {
@@ -291,7 +322,7 @@ export class CarouselComponent implements OnDestroy {
             childList: true,
             characterData: true
         };
-        observer.observe(this.elementRef.nativeElement, config);
+        observer.observe(this.cellsElement, config);
     }
 
     onDomChanges() {
@@ -367,7 +398,7 @@ export class CarouselComponent implements OnDestroy {
     }
 
     getCellWidth() {
-        let elementWidth = this.elementRef.nativeElement.clientWidth;
+        let elementWidth = this.carouselWidth;
 
         if (this.cellsToShow) {
             let margin = this.cellsToShow > 1 ? this.margin : 0;
