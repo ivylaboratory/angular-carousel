@@ -6,9 +6,13 @@ export class Utils {
         return this.carouselProperties.images;
     }
 
+    get margin() {
+        return this.carouselProperties.margin;
+    }
+
     get overflowCellsLimit() {
         if (this.images && this.isImagesLessCellLimit) {
-            let overflowCellsLimit = Math.floor((this.images.length - this.visibleCellsCount) / 2);
+            let overflowCellsLimit = Math.floor((this.images.length - this.numberOfVisibleCells) / 2);
 
             if (overflowCellsLimit < 0) {
                 overflowCellsLimit = 0;
@@ -21,11 +25,15 @@ export class Utils {
     }
 
     get isImagesLessCellLimit() {
-        return this.carouselProperties.overflowCellsLimit * 2 + this.visibleCellsCount > this.images.length;
+        return this.carouselProperties.overflowCellsLimit * 2 + this.numberOfVisibleCells > this.images.length;
     }
 
-    get visibleCellsCount() {
+    get numberOfVisibleCells() {
         return Math.ceil(this.visibleWidth / this.fullCellWidth);
+    }
+
+    get visibleCellsOverflowContainer() {
+        return (this.numberOfVisibleCells * this.fullCellWidth - this.margin) > this.visibleWidth;
     }
 
     get fullCellWidth() {

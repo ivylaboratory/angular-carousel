@@ -32,12 +32,12 @@ export class Slide {
         return this.carouselProperties.minSwipeDistance;
     }
 
-    get visibleCellsCount() {
-        return Math.ceil(this.visibleWidth / this.fullCellWidth);
+    get numberOfVisibleCells() {
+        return this.utils.numberOfVisibleCells;
     }
 
     get visibleCellsOverflowContainer() {
-        return (this.visibleCellsCount * this.fullCellWidth - this.margin) > this.visibleWidth;
+        return this.utils.visibleCellsOverflowContainer;
     }
 
     /* The position to which the container returns after each slide 
@@ -55,6 +55,7 @@ export class Slide {
         return this.carouselProperties.images;
     }
 
+    /* Number of cell elements in the DUM tree */
     get cellLength() {
         if (this.isLightDOM) {
             return this.cells.cellLengthInLightDOMMode;
@@ -249,7 +250,7 @@ export class Slide {
             let cellsWidth = this.cells.cellLengthInLightDOMMode * this.fullCellWidth;
 
             if (this.visibleWidth < cellsWidth) {
-                correction = -(this.visibleCellsCount * this.fullCellWidth - this.visibleWidth - this.margin);
+                correction = -(this.numberOfVisibleCells * this.fullCellWidth - this.visibleWidth - this.margin);
             }
 
             if (correction >= -this.margin) {
@@ -302,7 +303,7 @@ export class Slide {
         if (this.carouselProperties.loop) {
             return false;
         } else {
-            return (imageLength - counter + margin) < this.visibleCellsCount;
+            return (imageLength - counter + margin) < this.numberOfVisibleCells;
         }
     }
 
@@ -376,7 +377,9 @@ export class Slide {
     }
 
     isNextArrowDisabled() {
-        return this.isLastSlide(this.counter) || this.cellLength <= this.visibleCellsCount;
+        return this.isLastSlide(this.counter) || 
+        (!this.visibleCellsOverflowContainer && this.cellLength <= this.numberOfVisibleCells) ||
+        (this.visibleCellsOverflowContainer && this.cellLength < this.numberOfVisibleCells)
     }
 
     isPrevArrowDisabled() {
@@ -431,7 +434,7 @@ export class Slide {
 
     isLightDOMMode(counter) {
         let flag;
-        let remainderOfCells = this.images.length - this.overflowCellsLimit - this.visibleCellsCount;
+        let remainderOfCells = this.images.length - this.overflowCellsLimit - this.numberOfVisibleCells;
 
         if (!this.isLightDOM) {
             return false;
@@ -462,7 +465,7 @@ export class Slide {
 
     ifLeftDOMModeAtEnd(counter) {
         let flag;
-        let remainderOfCells = this.images.length - this.overflowCellsLimit - this.visibleCellsCount;
+        let remainderOfCells = this.images.length - this.overflowCellsLimit - this.numberOfVisibleCells;
 
         if (counter >= remainderOfCells) {
             flag = true;

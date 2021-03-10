@@ -22,7 +22,7 @@ export class Carousel {
 
     get cellLengthInLightDOMMode() {
         if (this.images) {
-            let cellLength = this.visibleCellsCount + this.overflowCellsLimit * 2;
+            let cellLength = this.numberOfVisibleCells + this.overflowCellsLimit * 2;
             if (cellLength > this.images.length) {
                 cellLength = this.images.length;
             }
@@ -42,10 +42,10 @@ export class Carousel {
 
     get cellLimit() {
         if (this.isLightDOM) {
-            let cellLimit = this.visibleCellsCount + this.overflowCellsLimit * 2;
+            let cellLimit = this.numberOfVisibleCells + this.overflowCellsLimit * 2;
 
-            if (cellLimit < this.visibleCellsCount) {
-                cellLimit = this.visibleCellsCount;
+            if (cellLimit < this.numberOfVisibleCells) {
+                cellLimit = this.numberOfVisibleCells;
             }
 
             return cellLimit;
@@ -82,8 +82,8 @@ export class Carousel {
         return this.properties.cellWidth + this.margin;
     }
 
-    get visibleCellsCount() {
-        return Math.ceil(this.visibleWidth / this.fullCellWidth);
+    get numberOfVisibleCells() {
+        return this.utils.numberOfVisibleCells;
     }
 
     get lapCounter() {

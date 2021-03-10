@@ -39,8 +39,8 @@ export class Container {
         return this.carouselProperties.cellWidth + this.carouselProperties.margin;
     }
 
-    get visibleCellsCount() {
-        return Math.ceil(this.visibleWidth / this.fullCellWidth);
+    get numberOfVisibleCells() {
+        return this.utils.numberOfVisibleCells;
     }
 
     get transitionDuration() {
@@ -61,7 +61,7 @@ export class Container {
 
     get cellLengthInLightDOMMode() {
         if (this.images) {
-            let cellLength = this.visibleCellsCount + this.overflowCellsLimit * 2;
+            let cellLength = this.numberOfVisibleCells + this.overflowCellsLimit * 2;
             if (cellLength > this.images.length) {
                 cellLength = this.images.length;
             }
@@ -72,7 +72,7 @@ export class Container {
     }
 
     get tooFewCells() {
-        return this.visibleCellsCount > this.cellLength;
+        return this.numberOfVisibleCells > this.cellLength;
     }
 
     get disabled() {
