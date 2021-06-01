@@ -1,5 +1,4 @@
 import { Component, ViewChildren } from '@angular/core';
-import { CarouselComponent } from './carousel/carousel.component';
 
 @Component({
 	selector: 'app-root',
@@ -46,7 +45,7 @@ export class AppComponent {
 		}
 	];
 
-    images2 = [
+    imagesForSlider = [
         {
             path: '/assets/photo-1444065707204-12decac917e8.jfif',
         },
@@ -64,54 +63,13 @@ export class AppComponent {
         },
     ];
 
-	@ViewChildren(CarouselComponent) carouselComponent;
-
     ngOnInit(){
-    }
 
-    ngAfterViewInit() {
-        this.myCarousel = this.carouselComponent.find(elem => elem.id === "my-carousel");
-    }
-
-    requestFullscreen() {
-    	document.documentElement.requestFullscreen();
     }
 
 	handleCarouselEvents(event) {
 		if (event.type === "click") {
 			console.log(event);
 		}
-	}
-
-	addImage() {
-		this.images.push({
-			path: '/assets/10.jfif'
-		});
-	}
-
-	next() {
-		this.myCarousel.next();
-	}
-
-	prev() {
-		this.myCarousel.prev();
-	}
-
-	resize() {
-		if (this.carouselWidth === 320) {
-			this.carouselWidth = 480;
-			this.carouselHeight = 320;
-		} else {
-			this.carouselWidth = 320;
-			this.carouselHeight = 220;
-		}
-	}
-
-	select(index) {
-		this.myCarousel.select(index);
-	}
-
-	changeImagesArray() {
-		this.images = this.images2;
 	}
 }
