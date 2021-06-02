@@ -375,7 +375,9 @@ export class CarouselComponent implements OnDestroy {
     }
 
     handleTransitionendCellContainer(event) {
-        this.carousel.handleTransitionend();
+        if (event.target['className'] === 'carousel-cells') {
+            this.carousel.handleTransitionend();
+        }
     }
 
     toggleVideo(video) {
