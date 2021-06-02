@@ -341,14 +341,12 @@ export class CarouselComponent implements OnDestroy {
     }
 
     handleTouchstart = (event: any) => {
-        //event.preventDefault();
         this.touches.addEventListeners("mousemove", "handleMousemove");
         this.carousel.handleTouchstart(event);
         this.isMoving = true;
     }
 
     handleHorizontalSwipe = (event: any) => {
-        event.preventDefault();
         this.carousel.handleHorizontalSwipe(event);
     }
 
