@@ -93,7 +93,7 @@ export class Touches {
             // Document
             } else if (listener === 'mouseup' || listener === "mousemove") {
                 if (action === 'addEventListener') {
-                    document.addEventListener(listener, this[handler], false);
+                    document.addEventListener(listener, this[handler], {passive: false});
                 }
                 if (action === 'removeEventListener') {
                     document.removeEventListener(listener, this[handler], false);
