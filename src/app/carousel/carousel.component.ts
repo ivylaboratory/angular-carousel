@@ -347,6 +347,7 @@ export class CarouselComponent implements OnDestroy {
     }
 
     handleHorizontalSwipe = (event: any) => {
+        event.preventDefault();
         this.carousel.handleHorizontalSwipe(event);
     }
 
@@ -381,7 +382,6 @@ export class CarouselComponent implements OnDestroy {
     }
 
     toggleVideo(video) {
-        event.preventDefault();
         if (this.videoProperties.noPlay) {
             return;
         }
