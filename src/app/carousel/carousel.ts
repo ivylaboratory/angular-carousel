@@ -1,19 +1,18 @@
 import {Properties} from './interfaces';
 
 export class Carousel {
-    cellsElement: HTMLElement;
+    cellsElement: HTMLElement | undefined;
 
     /* The slide length has been limited by the limitSlideLength() method */
-    isSlideLengthLimited: boolean;
+    isSlideLengthLimited: boolean = false;
 
     isContentImages: boolean = true;
-    visibleWidth: number;
+    visibleWidth!: number;
     isLazyLoad: boolean = true;
     isContainerLocked: boolean = true;
     alignCells: "left" | "center" = "left";
     initialContainerPosition: number = 0;
     autoplayId: any;
-    startTime;
     containerPullLimit = 100;
 
     get cellLength() {
@@ -96,10 +95,10 @@ export class Carousel {
 
     constructor(
         private properties: Properties,
-        private utils,
-        private cells,
-        private container,
-        private slide) {
+        private utils: any,
+        private cells: any,
+        private container: any,
+        private slide: any) {
 
         this.init();
     }
@@ -110,7 +109,7 @@ export class Carousel {
 
     init() {
         this.cellsElement = this.properties.cellsElement;
-        this.visibleWidth = this.properties.visibleWidth || this.cellsElement.parentElement.clientWidth;
+        this.visibleWidth = this.properties.visibleWidth || this.cellsElement!.parentElement!.clientWidth;
     }
 
     destroy() {
@@ -143,7 +142,7 @@ export class Carousel {
         this.slide.handleTransitionend();
     }
 
-    getImage(index) {
+    getImage(index:number) {
         return this.cells.getImage(index);
     }
 

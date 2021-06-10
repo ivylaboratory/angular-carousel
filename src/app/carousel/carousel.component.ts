@@ -17,28 +17,28 @@ import {Properties as CarouselProperties} from './interfaces';
 })
 
 export class CarouselComponent implements OnDestroy {
-    carousel;
-    container;
-    utils;
-    cells;
-    slide;
-    _id: string;
-    _images: Images;
+    carousel:any;
+    container:any;
+    utils:any;
+    cells:any;
+    slide:any;
+    _id!: string;
+    _images!: Images;
     touches: any;
     landscapeMode: any;
     minTimeout = 30;
-    isVideoPlaying: boolean;
-    _isCounter: boolean;
-    _width: number;
+    isVideoPlaying: boolean = false;
+    _isCounter: boolean = false;
+    _width!: number;
     _cellWidth: number | '100%' = 200;
     _loop: boolean = false;
     _lightDOM: boolean = false;
-    isMoving: boolean;
-    isNgContent: boolean;
-    cellLength: number;
+    isMoving: boolean = false;
+    isNgContent: boolean = false;
+    cellLength!: number;
     dotsArr: any;
-    carouselProperties: CarouselProperties;
-    savedCarouselWidth: number;
+    carouselProperties!: CarouselProperties;
+    savedCarouselWidth!: number;
 
     get isContainerLocked() {
         if (this.carousel) {
@@ -109,14 +109,14 @@ export class CarouselComponent implements OnDestroy {
 
     @Output() events: EventEmitter < any > = new EventEmitter < any > ();
 
-    @Input() id: number;
+    @Input() id!: number;
     @Input() height: number = 200;
-    @Input() width: number;
+    @Input() width!: number;
     @Input() autoplay: boolean = false;
     @Input() autoplayInterval: number = 5000;
     @Input() pauseOnHover: boolean = true;
     @Input() dots: boolean = false;
-    @Input() borderRadius: number;
+    @Input() borderRadius!: number;
     @Input() margin: number = 10;
     @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
     @Input() minSwipeDistance: number = 10;
@@ -126,11 +126,11 @@ export class CarouselComponent implements OnDestroy {
     @Input() counterSeparator: string = " / ";
     @Input() overflowCellsLimit: number = 3;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
-    @Input() cellsToShow: number;
+    @Input() cellsToShow!: number;
     @Input() cellsToScroll: number = 1;
     @Input() freeScroll: boolean = false;
     @Input() arrows: boolean = true;
-    @Input() arrowsOutside: boolean;
+    @Input() arrowsOutside: boolean = false;
     @Input() arrowsTheme: 'light' | 'dark' = 'light';
 
     @Input()
@@ -182,8 +182,8 @@ export class CarouselComponent implements OnDestroy {
     }
 
     @HostBinding('class.carousel') hostClassCarousel: boolean = true;
-    @HostBinding('style.height') hostStyleHeight: string;
-    @HostBinding('style.width') hostStyleWidth: string;
+    @HostBinding('style.height') hostStyleHeight!: string;
+    @HostBinding('style.width') hostStyleWidth!: string;
 
     @HostListener('window:resize', ['$event'])
     onWindowResize(event: any) {
@@ -336,7 +336,7 @@ export class CarouselComponent implements OnDestroy {
         this.hostStyleWidth = this.width + 'px';
     }
 
-    getImage(index) {
+    getImage(index:number) {
         return this.carousel.getImage(index);
     }
 
@@ -375,26 +375,10 @@ export class CarouselComponent implements OnDestroy {
         }
     }
 
-    handleTransitionendCellContainer(event) {
+    handleTransitionendCellContainer(event:any) {
         if (event.target['className'] === 'carousel-cells') {
             this.carousel.handleTransitionend();
         }
-    }
-
-    toggleVideo(video) {
-        if (this.videoProperties.noPlay) {
-            return;
-        }
-
-        if (video.paused) {
-            video.play();
-            this.isVideoPlaying = true;
-        } else {
-            video.pause();
-            this.isVideoPlaying = false;
-        }
-
-        this.ref.detectChanges();
     }
 
     getCellWidth() {

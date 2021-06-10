@@ -110,11 +110,13 @@ export class Touches {
         }
     }
 
-    addEventListeners(listener: string, handler: string) {
+    addEventListeners(listener: string) {
+        const handler: MouseHandler = this._mouseListeners[listener];
         window.addEventListener(listener, this[handler], false);
     }
 
-    removeEventListeners(listener: string, handler: string) {
+    removeEventListeners(listener: string) {
+        const handler: MouseHandler = this._mouseListeners[listener];
         window.removeEventListener(listener, this[handler], false);
     }
 
@@ -322,6 +324,8 @@ export class Touches {
             }, this.doubleTapMinTimeout);
         }
         this.lastTap = currentTime;
+
+        return undefined;
     }
 
     detectTap(): void {
@@ -358,6 +362,8 @@ export class Touches {
                 return this.getLinearSwipeType(event);
             }
         }
+
+        return undefined;
     }
 
     getLinearSwipeType(event: any) {

@@ -5,20 +5,20 @@ export interface Properties {
 }
 
 export class Slide {
-    slideLength: number;
-    isSlideInProgress: boolean;
-    direction: 'left' | 'right';
+    slideLength: number = 0;
+    isSlideInProgress: boolean = false;
+    direction: 'left' | 'right' | undefined;
     counter: number = 0;
     _counter: number = 0;
-    distance;
-    distanceAbs;
-    visibleWidth: number;
-    isNotClickOnArrow: boolean;
+    distance: number = 0;
+    distanceAbs: number = 0;
+    visibleWidth!: number;
+    isNotClickOnArrow: boolean = false;
     initialPositionX: number = 0;
     currentPositionX: number = 0;
 
     /* The slide length has been limited by the limitSlideLength() method */
-    isSlideLengthLimited: boolean;
+    isSlideLengthLimited: boolean = false;
 
     get fullCellWidth() {
         return this.carouselProperties.cellWidth + this.carouselProperties.margin;
@@ -73,9 +73,9 @@ export class Slide {
     }
 
     constructor(private carouselProperties: CarouselProperties,
-        private utils,
-        private cells,
-        private container) {
+        private utils: any,
+        private cells: any,
+        private container: any) {
 
         this.init();
     }
@@ -89,17 +89,17 @@ export class Slide {
         this.visibleWidth = this.carouselProperties.visibleWidth || this.carouselProperties.hostElement.clientWidth;
     }
 
-    handleTouchstart(event) {
+    handleTouchstart() {
         /* Touchstart event is not called for arrow */
         this.isNotClickOnArrow = true;
-        this.isSlideLengthLimited = undefined;
+        this.isSlideLengthLimited = false;
 
         if (!this.isSlideInProgress) {
             this.initialPositionX = this.container.getCurrentPositionX();
         }
     }
 
-    handleTouchend(event) {
+    handleTouchend() {
         if (!this.isNotClickOnArrow) {
             return;
         }
@@ -107,7 +107,7 @@ export class Slide {
         this.distanceAbs = Math.abs(this.initialPositionX - this.currentPositionX);
         this.distance = this.initialPositionX - this.currentPositionX;
         this.direction = this.getDirection();
-        this.isNotClickOnArrow = undefined;
+        this.isNotClickOnArrow = false;
         this.handleSlide();
     }
 
@@ -120,11 +120,7 @@ export class Slide {
         }
     }
 
-    detectClickOnArrow(event) {
-        return event.target.classList.contains("carousel-arrow");
-    }
-
-    handleSlide(customSlideLength: number = undefined) {
+    handleSlide(customSlideLength: number | undefined = undefined) {
         let isUsingButton = customSlideLength;
         let newPositionX;
 
@@ -216,6 +212,8 @@ export class Slide {
         if (this.direction === 'right') {
             return this.counter - this.slideLength;
         }
+
+        return 0;
     }
 
     /*  
@@ -238,7 +236,7 @@ export class Slide {
     }
 
     /* Offset the container to show the last cell completely */
-    getPositionCorrection(counter) {
+    getPositionCorrection(counter:number) {
         let correction = 0;
         let isLastSlide = this.isLastSlide(counter);
 
@@ -261,7 +259,7 @@ export class Slide {
         return correction;
     }
 
-    getSlideLength(distanceAbs) {
+    getSlideLength(distanceAbs: number) {
         let isLastSlide = this.isLastSlide(this.counter);
 
         /* If the last cell does not fit entirely, then the 
@@ -294,6 +292,8 @@ export class Slide {
         if (direction === 1) {
             return 'left';
         }
+
+        return undefined;
     }
 
     isSlidesEnd(counter: number) {
@@ -321,7 +321,7 @@ export class Slide {
         }
     }
 
-    getPositionByIndex(_counter) {
+    getPositionByIndex(_counter: number) {
         let correction = this.getPositionCorrection(this.counter + this.slideLength);
         let position;
 
@@ -348,7 +348,7 @@ export class Slide {
         return position;
     }
 
-    provideSafePosition(position) {
+    provideSafePosition(position: number) {
         const endPosition = this.container.getEndPosition();
 
         if (this.direction === 'left') {
@@ -366,7 +366,7 @@ export class Slide {
         return position;
     }
 
-    getPositionWithoutCorrection(value) {
+    getPositionWithoutCorrection(value: number) {
         let remainder = value % this.fullCellWidth;
 
         if (remainder !== 0) {
@@ -432,7 +432,7 @@ export class Slide {
         }
     }
 
-    isLightDOMMode(counter) {
+    isLightDOMMode(counter: number) {
         let flag;
         let remainderOfCells = this.images.length - this.overflowCellsLimit - this.numberOfVisibleCells;
 
@@ -463,7 +463,7 @@ export class Slide {
         return flag;
     }
 
-    ifLeftDOMModeAtEnd(counter) {
+    ifLeftDOMModeAtEnd(counter: number) {
         let flag;
         let remainderOfCells = this.images.length - this.overflowCellsLimit - this.numberOfVisibleCells;
 
@@ -478,7 +478,7 @@ export class Slide {
         return flag;
     }
 
-    ifLeftDOMModeToBeginning(counter) {
+    ifLeftDOMModeToBeginning(counter: number) {
         let flag;
 
         if (counter <= this.overflowCellsLimit) {

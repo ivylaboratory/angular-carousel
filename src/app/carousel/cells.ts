@@ -1,11 +1,19 @@
-import {Properties as CarouselProperties} from './interfaces';
+import {Properties as CarouselProperties, Image} from './interfaces';
+
+export interface Cell {
+    index: number,
+    positionX: number,
+    img: {
+        image: Image,
+        imageIndex: number
+    }
+}
 
 export class ImageUtils {
-    cellStack;
-    imageStack;
+    cellStack: Cell[] = [];
     element;
 
-    constructor(element) {
+    constructor(element: HTMLElement | undefined) {
         this.element = element;
     }
 
@@ -13,25 +21,15 @@ export class ImageUtils {
         return this.cellStack.filter(this.filter);
     }
 
-    comparePositions(a, b) {
-        if (a.positionX < b.positionX) {
-            return -1;
-        }
-        if (a.positionX > b.positionX) {
-            return 1;
-        }
-        return 0;
-    }
-
-    filter(cell) {
+    filter(cell: Cell) {
         return cell.img !== undefined;
     }
 }
 
 export class Cells {
-    cells: HTMLCollection;
-    element: HTMLElement;
-    visibleWidth: number;
+    cells: HTMLCollection | undefined;
+    element!: HTMLElement;
+    visibleWidth: number | undefined;
     counter: number = 0;
     imageUtils;
 
@@ -40,7 +38,7 @@ export class Cells {
     }
 
     get cellLength() {
-        return this.cells.length;
+        return this.cells ? this.cells.length : 0;
     }
 
     get fullCellWidth() {
@@ -72,8 +70,9 @@ export class Cells {
         return this.carouselProperties.lightDOM || this.carouselProperties.loop;
     }
 
-    constructor(private carouselProperties: CarouselProperties,
-        private utils) {
+    constructor(
+        private carouselProperties: CarouselProperties,
+        private utils: any) {
 
         this.imageUtils = new ImageUtils(this.element);
         this.init(carouselProperties);
@@ -84,7 +83,7 @@ export class Cells {
     }
 
     lineUp() {
-        const cells = this.element.children;
+        const cells = this.element ? this.element.children : [];
         this.imageUtils.cellStack = [];
 
         for (var i = 0; i < cells.length; i++) {
@@ -97,23 +96,23 @@ export class Cells {
                 this.imageUtils.cellStack.push({
                     index: i,
                     positionX,
-                    img: this.getImage(i)['image']
+                    img: this.getImage(i)!['image']
                 });
             }
         };
     }
 
     ifSequenceOfCellsIsChanged() {
-        const cells = this.element.children;
+        const cells:any = this.element.children;
         return cells[0]['style'].transform !== 'translateX(0px)';
     }
 
-    getCellPositionInContainer(cellIndexInDOMTree) {
+    getCellPositionInContainer(cellIndexInDOMTree: number) {
         let positionIndex = this.getCellIndexInContainer(cellIndexInDOMTree);
         return positionIndex * this.fullCellWidth;
     }
 
-    getCellIndexInContainer(cellIndexInDOMTree) {
+    getCellIndexInContainer(cellIndexInDOMTree: number) {
         let positionIndex;
 
         if (!this.isLightDOM) {
@@ -139,7 +138,7 @@ export class Cells {
         return positionIndex;
     }
 
-    getImage(cellIndex) {
+    getImage(cellIndex: number) {
         if (!this.images) {
             return;
         }
@@ -182,6 +181,6 @@ export class Cells {
     init(carouselProperties: CarouselProperties) {
         this.element = this.carouselProperties.cellsElement;
         this.cells = this.element.children;
-        this.visibleWidth = this.carouselProperties.visibleWidth || this.element.parentElement.clientWidth;
+        this.visibleWidth = this.carouselProperties.visibleWidth || this.element!.parentElement!.clientWidth;
     }
 }

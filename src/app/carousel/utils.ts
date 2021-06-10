@@ -41,7 +41,7 @@ export class Utils {
     }
 
     get visibleWidth() {
-        return this.carouselProperties.visibleWidth || this.carouselProperties.cellsElement.parentElement.clientWidth;
+        return this.carouselProperties.visibleWidth || this.carouselProperties!.cellsElement!.parentElement!.clientWidth;
     }
 
     constructor(private carouselProperties: CarouselProperties) {

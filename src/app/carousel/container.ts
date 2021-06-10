@@ -5,15 +5,15 @@ export class Container {
      * the active index, for example -1 or +1 
      */
     newPositionIndex: number = 0;
-    isPositionCorrection: boolean;
+    isPositionCorrection: boolean = false;
     initialPositionX: number = 0;
     initialElementPositionX: number = 0;
     isLocked: boolean = true;
     pullLimit = 100;
-    startTime;
-    startX: number;
-    moveX: number;
-    isSwipeInProgress: boolean;
+    startTime: number = 0;
+    startX: number = 0;
+    moveX: number = 0;
+    isSwipeInProgress: boolean = false;
 
     get visibleWidth() {
         return this.utils.visibleWidth;
@@ -88,8 +88,8 @@ export class Container {
     }
 
     constructor(private carouselProperties: CarouselProperties,
-        private utils,
-        private cells) {
+        private utils:any,
+        private cells:any) {
 
         this.init()
     }
@@ -141,7 +141,7 @@ export class Container {
     }
 
     move() {
-        let positionX = this.getMovePositionX();
+        let positionX: number = this.getMovePositionX();
         const isPulled = this.detectPulled();
         const direction = this.getDirection();
 
@@ -196,14 +196,21 @@ export class Container {
                 overflowX: Math.abs(currentPositionX - this.getEndPosition())
             }
         }
+
+        return undefined;
     }
 
-    slowdownOnPull(_positionX) {
+    slowdownOnPull(_positionX: number) {
         let distance = Math.abs(this.getDistance());
         const endPosition = this.getEndPosition();
         const isPulled = this.detectPulled();
+
+        if (!isPulled) {
+            return 0;
+        }
+
         const decelerationRatio = 3 + isPulled.overflowX / 50;
-        let positionX;
+        let positionX:number = 0;
 
         if (isPulled.edge === 'left') {
 
@@ -243,7 +250,7 @@ export class Container {
 
     finishMoving() {
         const positionX = this.getMovePositionX();
-        let newPositionX;
+        let newPositionX:number = 0;
 
         if (this.freeScroll) {
             newPositionX = this.getInertia();
@@ -266,7 +273,7 @@ export class Container {
         return this.initialPositionX - inertia;
     }
 
-    getAlignedPositionOnPull(newPositionX) {
+    getAlignedPositionOnPull(newPositionX:number) {
         const direction = this.getDirection();
 
         if (direction === 'left') {
@@ -285,7 +292,7 @@ export class Container {
     }
 
     getCurrentPositionX() {
-        const parentPosition = this.element.parentElement.getBoundingClientRect();
+        const parentPosition = this.element!.parentElement!.getBoundingClientRect();
         const position = this.element.getBoundingClientRect();
         return position.left - parentPosition.left;
     }
@@ -296,12 +303,12 @@ export class Container {
             return -(imagesInContainer.length * this.fullCellWidth - this.visibleWidth - this.margin);
         } else {
             const width = this.getWidth();
-            const visibleWidth = this.element.parentElement.clientWidth;
+            const visibleWidth = this.element!.parentElement!.clientWidth;
             return visibleWidth - width;
         }
     }
 
-    transformPositionX(value, duration = this.transitionDuration) {
+    transformPositionX(value:number, duration = this.transitionDuration) {
         if (value === undefined) {
             return;
         }
@@ -326,7 +333,7 @@ export class Container {
         this.element.style.width = width + "px";
     }
 
-    setInitialPosition(position) {
+    setInitialPosition(position:number) {
         this.initialPositionX = position;
     }
 
@@ -340,7 +347,7 @@ export class Container {
     }
 
     clearInitialValues() {
-        this.startX = this.moveX = undefined;
+        this.startX = this.moveX = 0;
     }
 
     getDirection() {
@@ -352,5 +359,7 @@ export class Container {
         if (direction === 1) {
             return 'left';
         }
+
+        return undefined;
     }
 }
