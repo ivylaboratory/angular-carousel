@@ -367,7 +367,7 @@ export class Slide {
     }
 
     getPositionWithoutCorrection(value: number) {
-        let remainder = value % this.fullCellWidth;
+        let remainder = Math.round(value) % this.fullCellWidth;
 
         if (remainder !== 0) {
             return value - (this.fullCellWidth + remainder);
