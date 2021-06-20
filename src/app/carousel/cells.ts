@@ -11,7 +11,7 @@ export interface Cell {
 
 export class ImageUtils {
     cellStack: Cell[] = [];
-    element;
+    element:any;
 
     constructor(element: HTMLElement | undefined) {
         this.element = element;

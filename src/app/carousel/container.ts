@@ -9,7 +9,7 @@ export class Container {
     initialPositionX: number = 0;
     initialElementPositionX: number = 0;
     isLocked: boolean = true;
-    pullLimit = 100;
+    pullLimit: number = 100;
     startTime: number = 0;
     startX: number = 0;
     moveX: number = 0;
