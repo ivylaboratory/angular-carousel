@@ -1,0 +1,33 @@
+{
+  "name": "angular-responsive-carousel",
+  "version": "2.1.0",
+  "description": "Carousel for Angular. A simple solution for horizontal scrolling images with lazy loading.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivylaboratory/angular-carousel.git"
+  },
+  "author": {
+    "name": "Nikita Drozhzhin",
+    "email": "drozhzhin.n.e@gmail.com"
+  },
+  "homepage": "http://ivylab.space/carousel",
+  "keywords": [
+    "Angular",
+    "ngx",
+    "Carousel",
+    "Swiper",
+    "Lazy loading",
+    "Image slider"
+  ],
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/ivylaboratory/angular-carousel/issues"
+  },
+  "peerDependencies": {
+    "@angular/common": "^12.0.5",
+    "@angular/core": "^12.0.5"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  }
+}
