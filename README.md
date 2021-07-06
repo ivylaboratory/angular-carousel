@@ -84,9 +84,9 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 
 The IvyCarousel also has a Pro version, with an [extended API](http://ivylab.space/carousel).
 
-## Browser support
+## Author services
 
-IvyCarousel supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
+Are you interested in this library but lacks features? Write to the author, he can do it for you.
 
 ## Roadmap
 
