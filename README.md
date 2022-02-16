@@ -71,6 +71,7 @@ To use lazy loading, pass the carousel an array of images, as shown in the examp
 | autoplayInterval | number | 5000 | The interval between scrolling the carousel. Used together with autoplay. |
 | pauseOnHover | boolean | true | Stops autoplay if the cursor is over the carousel area. |
 | dots | boolean | false | Carousel progress bar. |
+| dotsPerPage | boolean | false | If cellsToShow and cellsToScroll are larger than 1, if dotsPerPage is true it will only show 1 dot per page of cells. So with 9 images and cellsToShow and Scrollset ot 3 it will show only 3 dots |
 | margin | number | 10 | Cell spacing. |
 | minSwipeDistance | number | 10 | Minimum distance for swipe. |
 | transitionDuration | number | 300 | Animation duration. |
