@@ -95,7 +95,7 @@ export class CarouselComponent implements OnDestroy {
 
     get activeDotIndex() {
         if (this.dotsPerPage) {
-           return Math.ceil(this.slideCounter / this.cellsToScroll);
+           return Math.ceil(this.slideCounter / this.cellsToScroll) % this.dotsArr.length;
         }
         return this.slideCounter % this.cellLength;
     }
