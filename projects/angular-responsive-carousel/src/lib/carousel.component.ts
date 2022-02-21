@@ -94,6 +94,9 @@ export class CarouselComponent implements OnDestroy {
     }
 
     get activeDotIndex() {
+        if (this.dotsPerPage) {
+           return Math.ceil(this.slideCounter / this.cellsToScroll) % this.dotsArr.length;
+        }
         return this.slideCounter % this.cellLength;
     }
 
@@ -116,6 +119,7 @@ export class CarouselComponent implements OnDestroy {
     @Input() autoplayInterval: number = 5000;
     @Input() pauseOnHover: boolean = true;
     @Input() dots: boolean = false;
+    @Input() dotsPerPage: boolean = false;
     @Input() borderRadius!: number;
     @Input() margin: number = 10;
     @Input() objectFit: 'contain' | 'cover' | 'none' = 'cover';
@@ -237,7 +241,7 @@ export class CarouselComponent implements OnDestroy {
     ngAfterViewInit() {
         this.initCarousel();
         this.cellLength = this.getCellLength();
-        this.dotsArr = Array(this.cellLength).fill(1);
+        this.dotsArr = this.dotsPerPage ? Array(Math.ceil(this.cellLength/this.cellsToScroll)).fill(1): Array(this.cellLength).fill(1);
         this.ref.detectChanges();
         this.carousel.lineUpCells();
         this.savedCarouselWidth = this.carouselWidth;
