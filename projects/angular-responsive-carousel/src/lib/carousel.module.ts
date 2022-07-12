@@ -12,14 +12,7 @@ import {CarouselComponent} from './carousel.component';
     exports: [
         CarouselComponent
     ],
-    providers: [
-
-    ],
-    bootstrap: [
-        
-    ],
-    entryComponents: [
-        CarouselComponent
-    ]
+    providers: [],
+    bootstrap: []
 })
 export class IvyCarouselModule { }
