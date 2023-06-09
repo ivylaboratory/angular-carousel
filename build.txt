@@ -1,0 +1,3 @@
+to build module:
+cd project/angular-responsive-carousel
+ng build

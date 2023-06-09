@@ -1,9 +1,3 @@
-
-to build
-cd project/angular-responsive-carousel
-ng build
-
-
 # Carousel for Angular
 
 <img src="https://badgen.net/bundlephobia/min/angular-responsive-carousel" />
