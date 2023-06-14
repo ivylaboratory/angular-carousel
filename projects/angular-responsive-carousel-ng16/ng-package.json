@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/angular-responsive-carousel-ng-16",
+  "dest": "../../dist/angular-responsive-carousel-ng16",
   "lib": {
     "entryFile": "src/public-api.ts"
   }

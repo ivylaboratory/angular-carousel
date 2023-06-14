@@ -1,5 +1,5 @@
 {
-  "name": "angular-responsive-carousel-ng-16",
+  "name": "angular-responsive-carousel-ng16",
   "version": "1.0.2",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "create-library": "cd projects/angular-responsive-carousel && npm pack && mv **.tgz ../../dist/"
+    "create-library": "cd projects/angular-responsive-carousel-ng16 && npm pack && mv **.tgz ../../dist/"
   },
   "dependencies": {
     "@angular/animations": "^16.1.0",

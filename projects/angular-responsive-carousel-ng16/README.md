@@ -1,6 +1,6 @@
 # Carousel for Angular
 
-<img src="https://badgen.net/bundlephobia/min/angular-responsive-carousel-ng-16" />
+<img src="https://badgen.net/bundlephobia/min/angular-responsive-carousel-ng16" />
 
 A simple solution for horizontal scrolling images with lazy loading.
 
@@ -12,11 +12,11 @@ Live demo can be found on [home page](http://ivylab.space/carousel).
 
 Install the npm package.
 ```
-  npm i angular-responsive-carousel-ng-16
+  npm i angular-responsive-carousel-ng16
 ```
 Import module:
 ```ts
-  import {IvyCarouselModule} from 'angular-responsive-carousel-ng-16';
+  import {IvyCarouselModule} from 'angular-responsive-carousel-ng16';
 
   @NgModule({
       imports: [IvyCarouselModule]

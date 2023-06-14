@@ -1,5 +1,5 @@
 /*
- * Public API Surface of angular-responsive-carousel-ng-16
+ * Public API Surface of angular-responsive-carousel-ng16
  */
 
 export * from './lib/carousel.module';

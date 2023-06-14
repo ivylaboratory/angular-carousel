@@ -5,11 +5,11 @@
 
 Install the npm package.
 ```
-  npm i angular-responsive-carousel-ng-16
+  npm i angular-responsive-carousel-ng16
 ```
 Import module:
 ```ts
-  import {IvyCarouselModule} from 'angular-responsive-carousel-ng-16';
+  import {IvyCarouselModule} from 'angular-responsive-carousel-ng16';
 
   @NgModule({
       imports: [IvyCarouselModule]

@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { IvyCarouselModule } from 'angular-responsive-carousel-ng-16';
+import { IvyCarouselModule } from 'angular-responsive-carousel-ng16';
 
 @NgModule({
   declarations: [

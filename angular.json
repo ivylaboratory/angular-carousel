@@ -106,23 +106,23 @@
         }
       }
     },
-    "angular-responsive-carousel-ng-16": {
+    "angular-responsive-carousel-ng16": {
       "projectType": "library",
-      "root": "projects/angular-responsive-carousel",
-      "sourceRoot": "projects/angular-responsive-carousel/src",
+      "root": "projects/angular-responsive-carousel-ng16",
+      "sourceRoot": "projects/angular-responsive-carousel-ng16/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/angular-responsive-carousel/ng-package.json"
+            "project": "projects/angular-responsive-carousel-ng16/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/angular-responsive-carousel/tsconfig.lib.prod.json"
+              "tsConfig": "projects/angular-responsive-carousel-ng16/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/angular-responsive-carousel/tsconfig.lib.json"
+              "tsConfig": "projects/angular-responsive-carousel-ng16/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -130,9 +130,9 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/angular-responsive-carousel/src/test.ts",
-            "tsConfig": "projects/angular-responsive-carousel/tsconfig.spec.json",
-            "karmaConfig": "projects/angular-responsive-carousel/karma.conf.js"
+            "main": "projects/angular-responsive-carousel-ng16/src/test.ts",
+            "tsConfig": "projects/angular-responsive-carousel-ng16/tsconfig.spec.json",
+            "karmaConfig": "projects/angular-responsive-carousel-ng16/karma.conf.js"
           }
         }
       }
