@@ -3,9 +3,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "angular-responsive-carousel": [
-        "dist/angular-responsive-carousel/angular-responsive-carousel",
-        "dist/angular-responsive-carousel"
+      "angular-responsive-carousel-ng-16": [
+        "dist/angular-responsive-carousel-ng-16/angular-responsive-carousel-ng-16",
+        "dist/angular-responsive-carousel-ng-16"
       ]
     },
     "baseUrl": "./",

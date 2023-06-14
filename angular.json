@@ -106,7 +106,7 @@
         }
       }
     },
-    "angular-responsive-carousel": {
+    "angular-responsive-carousel-ng-16": {
       "projectType": "library",
       "root": "projects/angular-responsive-carousel",
       "sourceRoot": "projects/angular-responsive-carousel/src",
