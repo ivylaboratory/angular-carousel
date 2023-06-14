@@ -12,6 +12,9 @@
       "es2018"
     ]
   },
+  "include": [
+    "src/**/*.ts"
+  ],
   "exclude": [
     "src/test.ts",
     "**/*.spec.ts"
