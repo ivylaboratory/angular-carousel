@@ -46,5 +46,6 @@ testem.log
 Thumbs.db
 projects/angular-responsive-carousel/node_modules
 projects/angular-responsive-carousel/package-lock.json
-package-lock.json
+**/package-lock.json
 **/angular-responsive-carousel-**
+package-lock.json
