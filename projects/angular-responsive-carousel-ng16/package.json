@@ -1,6 +1,6 @@
 {
   "name": "angular-responsive-carousel-ng16",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Carousel for Angular. A simple solution for horizontal scrolling images with lazy loading.",
   "repository": {
     "type": "git",
