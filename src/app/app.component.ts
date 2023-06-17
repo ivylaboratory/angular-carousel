@@ -7,6 +7,7 @@ import { Component, ViewChildren } from '@angular/core';
 })
 
 export class AppComponent {
+    title = 'ivySwiperApp';
     images = [
         {path: '/assets/photo-1548625149-9129dad5eef7.jpg'},
         {path: '/assets/photo-1548625149-d37da68f9a7f.jpg'},

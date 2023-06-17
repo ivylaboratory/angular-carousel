@@ -1,12 +1,5 @@
 # Carousel for Angular
 
-<img src="https://badgen.net/bundlephobia/min/angular-responsive-carousel" />
-
-A simple solution for horizontal scrolling images with lazy loading.
-
-Live demo can be found on [home page](http://ivylab.space/carousel).
-
-🔬️ Help make IvyCarousel better by [answering a few questions](https://docs.google.com/forms/d/e/1FAIpQLSemPfIejDl3Pq4mFz32sFZgvLo7JbyXZPZFt4uDw9G4H92H8Q/viewform?usp=sf_link).
 
 ## Installation
 
